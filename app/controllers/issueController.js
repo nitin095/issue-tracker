@@ -1,0 +1,346 @@
+// modules dependencies.
+const mongoose = require('mongoose');
+const shortid = require('shortid');
+const time = require('../libs/timeLib');
+const response = require('../libs/responseLib')
+const logger = require('../libs/loggerLib');
+const validateInput = require('../libs/paramsValidationLib');
+const check = require('../libs/checkLib');
+const token = require('../libs/tokenLib');
+const mailer = require('../libs/mailer')
+
+// Models 
+const issueModel = mongoose.model('Issue')
+const projectModel = mongoose.model('Project')
+
+
+// Create issue 
+let createIssue = (req, res) => {
+
+    let issueId = shortid.generate();
+
+    let addIssueToProject = () => {
+        return new Promise((resolve, reject) => {
+            if (check.isEmpty(req.body.title && req.body.projectId)) {
+                let apiResponse = response.generate(true, 'required parameters are missing', 403, null)
+                reject(apiResponse)
+            } else {
+                projectModel.findOneAndUpdate({ "projectId": req.body.projectId },
+                    { $push: { issues: issueId } },
+                    (error, result) => {
+                        if (error) {
+                            logger.error(`Error Occured : ${error}`, 'Database', 10)
+                            let apiResponse = response.generate(true, 'Error Occured.', 500, null)
+                            res.send(apiResponse)
+                            reject(error)
+                        } else {
+                            resolve()
+                        }
+                    });
+            }
+        })
+    }// end addIssueToProject
+
+    let newIssue = () => {
+
+        return new Promise((resolve, reject) => {
+            let newIssue = new issueModel({
+                issueId: issueId,
+                projectId: req.body.projectId,
+                reporter: req.body.reporter,
+                title: req.body.title,
+            }) // end new issue model
+
+            newIssue.save((err, result) => {
+                if (err) {
+                    console.log('Error Occured.')
+                    logger.error(`Error Occured : ${err}`, 'Database', 10)
+                    let apiResponse = response.generate(true, 'Error Occured.', 500, null)
+                    reject(apiResponse)
+                } else {
+                    console.log('Success in issue creation')
+                    resolve(result)
+                }
+            }) // end newIssue save
+        }) // end promise
+
+    } // end newIssue function
+
+    // promise call
+    addIssueToProject()
+        .then(newIssue)
+        .then((issue) => {
+            let apiResponse = response.generate(false, 'Issue Created successfully', 200, issue);
+            res.send(apiResponse);
+        })
+        .catch((err) => {
+            console.log("error handler");
+            console.log(err);
+            res.status(err.status)
+            res.send(err)
+        })
+
+}// end create issue
+
+
+// Create  comment
+let createComment = (req, res) => {
+
+    if (check.isEmpty(req.body.body)) {
+        let apiResponse = response.generate(true, 'required parameters are missing', 403, null)
+        res.send(apiResponse);
+    } else {
+        let newComment = {
+            reporter: req.body.reporter,
+            body: req.body.body
+        }
+        issueModel.findOneAndUpdate(
+            { issueId: req.params.issueId },
+            { $push: { comments: newComment } },
+            (error, result) => {
+                if (error) {
+                    console.log('Error Occured.')
+                    logger.error(`Error Occured : ${err}`, 'Database', 10)
+                    let apiResponse = response.generate(true, 'Error Occured.', 500, null)
+                    res.send(apiResponse);
+                } else {
+                    undoReq = {
+                        body: { comment_id: result._id },
+                        params: { issueId: req.params.issueId }
+                    }
+                    undoStack.push({ action: () => deleteComment(undoReq) });
+                    console.log('Success in comment creation')
+                    let apiResponse = response.generate(false, 'Comment created.', 200, result)
+                    res.send(apiResponse);
+                }
+            });
+    }// end else
+
+}// end createComment 
+
+
+// Get all issue details 
+let getAllIssues = (req, res) => {
+
+    let filter = req.query.fields ? req.query.fields.replace(new RegExp(";", 'g'), " ") : '';
+    issueModel.find({ 'reporter': req.params.userId })
+        .select(`-__v ${filter}`)
+        .lean()
+        .exec((err, result) => {
+            if (err) {
+                console.log(err)
+                logger.error(err.message, 'Issue Controller: getAllIssues', 10)
+                let apiResponse = response.generate(true, 'Failed To Find Issue Details', 500, null)
+                res.send(apiResponse)
+            } else if (check.isEmpty(result)) {
+                logger.info('No Issue Found', 'Issue Controller: getAllIssues')
+                let apiResponse = response.generate(true, 'No Issue Found', 404, null)
+                res.send(apiResponse)
+            } else {
+                let apiResponse = response.generate(false, 'All Issue Details Found', 200, result)
+                res.send(apiResponse)
+            }
+        })
+
+}// end get all issues
+
+
+// Get all Project issues
+let getProjectIssues = (req, res) => {
+    let filter = req.query.fields ? req.query.fields.replace(new RegExp(";", 'g'), " ") : '';
+    // issueModel.find({ 'reporter': req.query.userId })
+    issueModel.find({ projectId: req.params.projectId })
+        .select(`-__v ${filter}`)
+        .lean()
+        .exec((err, result) => {
+            if (err) {
+                console.log(err)
+                logger.error(err.message, 'Issue Controller: getProjectIssues', 10)
+                let apiResponse = response.generate(true, 'Failed To Find Issue Details', 500, null)
+                res.send(apiResponse)
+            } else if (check.isEmpty(result)) {
+                logger.info('No Issue Found', 'Issue Controller: getProjectIssues')
+                let apiResponse = response.generate(true, 'No Issue Found', 404, null)
+                res.send(apiResponse)
+            } else {
+                let apiResponse = response.generate(false, 'All Issue Details Found', 200, result)
+                res.send(apiResponse)
+            }
+        })
+}// end get all project issues
+
+
+// Get single issue details 
+let getSingleIssue = (req, res) => {
+
+    let filter = req.query.fields ? req.query.fields.replace(new RegExp(";", 'g'), " ") : '';
+    issueModel.findOne({ 'issueId': req.params.issueId })
+        .select(`-__v -_id ${filter}`)
+        .lean()
+        .exec((err, result) => {
+            if (err) {
+                console.log(err)
+                logger.error(err.message, 'Issue Controller: getSingleIssue', 10)
+                let apiResponse = response.generate(true, 'Failed To Find Issue Details', 500, null)
+                res.send(apiResponse)
+            } else if (check.isEmpty(result)) {
+                logger.info('No Issue Found', 'Issue Controller:getSingleIssue')
+                let apiResponse = response.generate(true, 'No Issue Found', 404, null)
+                res.send(apiResponse)
+            } else {
+                let apiResponse = response.generate(false, 'Issue Details Found', 200, result)
+                res.send(apiResponse)
+            }
+        })
+
+}// end get single issue
+
+
+// Edit issue
+let editIssue = (req, res) => {
+    let options = req.body;
+    issueModel.findOneAndUpdate({ 'issueId': req.params.issueId }, options).exec((err, result) => {
+        if (err) {
+            console.log(err)
+            logger.error(err.message, 'issue Controller:editissue', 10)
+            let apiResponse = response.generate(true, 'Failed To edit issue details', 500, null)
+            res.send(apiResponse)
+        } else if (check.isEmpty(result)) {
+            logger.info('No issue Found', 'issue Controller: editissue')
+            let apiResponse = response.generate(true, 'No issue Found', 404, null)
+            res.send(apiResponse)
+        } else {
+            delete (result.createdOn)
+            delete (result.lastModified)
+            let apiResponse = response.generate(false, 'issue details edited', 200, result)
+            if (res) res.send(apiResponse)
+        }
+    });
+
+}// end edit issue
+
+
+// Edit comment
+let editComment = (req, res) => {
+
+    issueModel.findOneAndUpdate({ 'issueId': req.params.issueId, 'comments._id': req.body.comment_id },
+        { 'comments.$.body': req.body.body }).exec((err, result) => {
+            if (err) {
+                console.log(err)
+                logger.error(err.message, 'issue Controller: editComment', 10)
+                let apiResponse = response.generate(true, 'Failed To edit comment', 500, null)
+                res.send(apiResponse)
+            } else if (check.isEmpty(result)) {
+                logger.info('No comment Found', 'issue Controller: editComment')
+                let apiResponse = response.generate(true, 'No issue Found', 404, null)
+                res.send(apiResponse)
+            } else {
+                let apiResponse = response.generate(false, 'Comment edited', 200, result)
+                res.send(apiResponse)
+            }
+        });
+
+}// end edit comment
+
+
+// Delete issue
+let deleteIssue = (req, res) => {
+
+    let removeIssueFromProject = () => {
+        return new Promise((resolve, reject) => {
+            if (check.isEmpty(req.body.projectId && req.params.issueId)) {
+                let apiResponse = response.generate(true, 'required parameters are missing', 403, null)
+                reject(apiResponse)
+            } else {
+                projectModel.findOneAndUpdate({ "projectId": req.body.projectId },
+                    { $pull: { issues: req.params.issueId } },
+                    (error, result) => {
+                        if (error) {
+                            logger.error(`Error Occured : ${error}`, 'Database', 10)
+                            let apiResponse = response.generate(true, 'Error Occured.', 500, null)
+                            res.send(apiResponse)
+                            reject(error)
+                        } else {
+                            resolve()
+                        }
+                    });
+            }
+        })
+    }// end addIssueToProject
+
+    let removeIssue = () => {
+        return new Promise((resolve, reject) => {
+            issueModel.findOneAndDelete({ 'issueId': req.params.issueId }).exec((err, result) => {
+                if (err) {
+                    console.log(err)
+                    logger.error(err.message, 'Issue Controller: deleteissue', 10)
+                    let apiResponse = response.generate(true, 'Failed To delete issue', 500, null)
+                    reject(apiResponse)
+                } else if (check.isEmpty(result)) {
+                    logger.info('No issue Found', 'issue Controller: deleteissue')
+                    let apiResponse = response.generate(true, 'No issue Found', 404, null)
+                    reject(apiResponse)
+                } else {
+                    resolve(result)
+                }
+            });
+        })
+    }// end removeIssue
+
+    // promise call
+    return removeIssueFromProject()
+        .then(removeIssue)
+        .then((result) => {
+            if (res) {
+                let apiResponse = response.generate(false, 'Issue deleted successfully', 200, result);
+                res.send(apiResponse);
+            } else {
+                return result.data
+            }
+        })
+        .catch((err) => {
+            console.log("error handler");
+            console.log(err);
+            res.status(err.status)
+            res.send(err)
+        })
+
+}// end delete issue
+
+
+// Delete comment
+let deleteComment = (req, res) => {
+    console.log('ISSUE ID>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', req.params.issueId)
+    console.log('COMMENT ID>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', req.body.comment_id)
+    issueModel.updateOne(
+        { issueId: req.params.issueId },
+        { $pull: { comments: { _id: req.body.comment_id } } },
+        (error, result) => {
+            if (error) {
+                console.log('Error Occured.')
+                logger.error(`Error Occured : ${error}`, 'Database', 10)
+                let apiResponse = response.generate(true, 'Error Occured.', 500, null)
+                res.send(apiResponse);
+            } else {
+                console.log('comment deleted')
+                let apiResponse = response.generate(false, 'Comment created.', 200, result)
+                if (res) res.send(apiResponse);
+            }
+        });
+
+}// end delete issue
+
+
+module.exports = {
+
+    createIssue: createIssue,
+    createComment: createComment,
+    getAllIssues: getAllIssues,
+    getProjectIssues: getProjectIssues,
+    getSingleIssue: getSingleIssue,
+    editIssue: editIssue,
+    editComment: editComment,
+    deleteIssue: deleteIssue,
+    deleteComment: deleteComment,
+
+}// end exports
