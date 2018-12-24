@@ -49,6 +49,8 @@ let createIssue = (req, res) => {
                 projectId: req.body.projectId,
                 reporter: req.body.reporter,
                 title: req.body.title,
+                status: 'backlog',
+                issueNumber: 1
             }) // end new issue model
 
             newIssue.save((err, result) => {

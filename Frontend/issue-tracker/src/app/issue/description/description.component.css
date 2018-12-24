@@ -1,0 +1,28 @@
+.container {
+    height: 90vh;
+    overflow: hidden;
+}
+
+.create-issue-input {
+    display: flex;
+    flex-wrap: wrap;
+    background: whitesmoke;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.create-issue-input input {
+    border: none;
+    flex-grow: 1;
+    background: none
+}
+
+.create-issue-input input:focus {
+    outline: none
+}
+
+.create-issue-input:hover {
+    -webkit-box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
+    box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
+}

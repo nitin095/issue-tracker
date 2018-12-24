@@ -1,0 +1,22 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<div class="container" *ngIf="newIssue">
+  <div class="row py-5">
+    <div class="col-auto">
+      <span class="heading-2">Create issue</span>
+    </div>
+  </div>
+  <div class="row align-items-center">
+    <div class="col-12 col-md-8 col-lg-6 create-issue-input">
+      <input type="text" #issueTitle placeholder="What needs to be done?" (keyup.enter)="createIssue(issueTitle.value)">
+      <button class="my-3" mat-flat-button color="primary" (click)="createIssue(issueTitle.value)">Create</button>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="issue">
+  <div class="row py-5">
+    <div class="col-auto">
+      <span class="heading-2">{{issue.title}}</span>
+    </div>
+  </div>
+</div>

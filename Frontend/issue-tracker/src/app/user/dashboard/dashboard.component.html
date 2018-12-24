@@ -1,0 +1,27 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport="false" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+        <mat-icon class="pt-2 px-3">menu</mat-icon>
+        <mat-nav-list>
+            <a mat-list-item><mat-icon>assignment</mat-icon>Assigned Issues</a>
+            <a mat-list-item><mat-icon>assignment_ind</mat-icon>Reported Issues</a>
+            <a mat-list-item><mat-icon>remove_red_eye</mat-icon>Watching</a>
+            <span class="spacer"></span>
+            <a mat-list-item [routerLink]="['/issue/browse']"><mat-icon>bug_report</mat-icon>Report new issue</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+
+        <div class="container-fluid">
+            <div class="row py-3 sticky-top header-row">
+                <div class="col-auto heading-2">
+                    Assigned Issues
+                </div>
+            </div>
+            <div class="row pt-3">
+                <data-table class="full-width"></data-table>
+            </div>
+        </div>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>

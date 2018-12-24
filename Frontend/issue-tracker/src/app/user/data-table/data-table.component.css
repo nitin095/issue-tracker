@@ -1,0 +1,17 @@
+.full-width-table {
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  -webkit-box-shadow: 0px 0px 11px -4px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 11px -4px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 11px -4px rgba(0,0,0,0.75);
+}
+
+tr[mat-row] {
+  transition: all 0.2s ease;
+}
+
+tr[mat-row]:hover{
+  background: #d5e4fa;
+}

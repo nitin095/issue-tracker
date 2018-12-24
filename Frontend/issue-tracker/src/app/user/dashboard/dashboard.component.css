@@ -1,0 +1,40 @@
+.sidenav-container {
+    /* height: 90vh; */
+    /* overflow-y: scroll */
+}
+
+.sidenav {
+    width: 220px;
+    background-color: whitesmoke
+}
+
+mat-sidenav-content {
+    height: 90vh;
+    overflow: scroll
+}
+
+.header-row{
+    background: #fff
+}
+
+mat-nav-list{
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    font-weight: 300;
+    color: rgb(70, 70, 70)
+}
+
+.spacer {
+    flex-grow: 1
+}
+
+mat-nav-list mat-icon{
+    color: grey;
+    padding-right: 2rem;
+    transform: scale(0.9)
+}
+
+mat-nav-list a {
+    font-size: 0.85rem;
+}

@@ -189,7 +189,6 @@ module.exports.setRouter = (app) => {
 	 * @apiParam {String} authToken The token for authentication.(Send authToken as query parameter, body parameter or as a header)
 	 * @apiParam {String} createdBy userId of the creator passed as the body parameter
      * @apiParam {String} title Title of the issue passed as the body parameter
-     * @apiParam {Number} notes Notes of the issue passed as the body parameter
 	 *
 	 *  @apiSuccessExample {json} Success-Response:
 	 *  {
@@ -210,7 +209,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-	app.post(`${baseUrl}/comment/create/:issueId`, auth.isAuthorized, issueController.createIssueComment);
+	app.post(`${baseUrl}/comment/create/:issueId`, auth.isAuthorized, issueController.createComment);
 
     /**
 	 * @api {post} /api/v1/issues/create Create new issue comment

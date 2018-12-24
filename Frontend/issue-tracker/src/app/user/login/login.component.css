@@ -1,0 +1,112 @@
+.container {
+  overflow: hidden;
+}
+
+.main-section {
+  height:90vh;
+}
+
+mat-card-title {
+  letter-spacing: 0.8px
+}
+
+mat-icon {
+  cursor: pointer;
+  color: grey
+}
+
+mat-progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+.line { 
+  height: inherit;
+  border-left: 1px solid lightgrey;
+  position: relative;
+}
+
+.or {
+  position: absolute;
+  top: 50%;
+  left: -11px;
+  transform: translateY(-16px);
+  color:#9E9E9E;
+  background-color: red;
+  background-color: #FAFAFA;
+  font-size: small;
+  letter-spacing: 2px
+}
+
+.login-btn {
+  position: absolute;
+  bottom: -5%;
+  left: 50%;
+  transform: translateX(-45px);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0rem 1rem;
+  letter-spacing: 1px;
+  background-color:#c8cef3;
+  color: #3f51b5;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color:#b1b9eb;
+}
+
+.recover-btn {
+  position: absolute;
+  bottom: -5%;
+  left: 50%;
+  transform: translateX(-100px);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0rem 1rem;
+  letter-spacing: 1px;
+  background-color:#c8cef3;
+  color: #3f51b5;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  transition: all 0.3s ease;
+}
+
+.recover-btn:hover {
+  background-color:#b1b9eb;
+}
+
+.reset-btn {
+  position: absolute;
+  bottom: -5%;
+  left: 50%;
+  transform: translateX(-90px);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0rem 1rem;
+  letter-spacing: 1px;
+  background-color:#c8cef3;
+  color: #3f51b5;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+  background-color:#b1b9eb;
+}
+
+button:focus {
+  outline: none;
+  z-index: 1;
+}
+
+.backdrop::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.2);
+}
