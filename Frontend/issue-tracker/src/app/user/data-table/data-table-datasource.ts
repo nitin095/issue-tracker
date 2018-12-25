@@ -13,19 +13,6 @@ export interface DataTableItem {
   reporter: String;
 }
 
-// TODO: replace this with real data from your application
-// const EXAMPLE_DATA: DataTableItem[] = [
-//   { id: 1, name: 'Hydrogen' },
-//   { id: 2, name: 'Helium' },
-//   { id: 3, name: 'Lithium' },
-//   { id: 4, name: 'Beryllium' },
-//   { id: 5, name: 'Boron' },
-//   { id: 6, name: 'Carbon' },
-//   { id: 7, name: 'Nitrogen' },
-//   { id: 8, name: 'Oxygen' },
-//   { id: 9, name: 'Fluorine' }
-// ];
-
 /**
  * Data source for the DataTable view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
@@ -89,7 +76,8 @@ export class DataTableDataSource extends DataSource<DataTableItem> {
       const isAsc = this.sort.direction === 'asc';
       switch (this.sort.active) {
         case 'title': return compare(a.title, b.title, isAsc);
-        case 'status': return compare(+a.status, +b.status, isAsc);
+        case 'status': return compare(a.status, b.status, isAsc);
+        case 'date': return compare(a.createdOn, b.createdOn, isAsc);
         default: return 0;
       }
     });

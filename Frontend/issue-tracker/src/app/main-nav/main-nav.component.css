@@ -31,3 +31,43 @@ button[mat-button]{
   letter-spacing: 1px  
 }
 
+.search-issue-input {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  font-size: small;
+  background: rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease
+}
+
+.search-issue-input mat-icon {
+  font-size: small;
+  color: #4c8dee;
+  align-self: flex-end;
+  cursor: pointer;
+  transition: all 0.3s ease
+}
+
+.search-issue-input mat-icon:hover {
+  transform: scale(1.2);
+  color: #fff
+}
+
+.search-issue-input input {
+  border: none;
+  color: #fff;
+  padding-left: 1rem;
+  flex-grow: 1;
+  background: none;
+  transition: all 0.3s ease
+}
+
+.search-issue-input input::placeholder {
+  color: #4c8dee
+}
+
+.search-issue-input input:focus {
+  outline: none;
+  width: 20vw
+}

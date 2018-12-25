@@ -15,8 +15,27 @@
 
 <div class="container" *ngIf="issue">
   <div class="row py-5">
-    <div class="col-auto">
-      <span class="heading-2">{{issue.title}}</span>
+    <div class="col-8">
+      <div class="row">
+        <div class="col-12">
+          <span class="heading-2">{{issue.title}}</span>
+        </div>
+        <div class="col-12 my-2 issue-options">
+          <mat-icon class="mr-4" matTooltip="Add attachment" matRipple>attachment</mat-icon>
+          <mat-icon matTooltip="Link issue" matRipple>link</mat-icon>
+        </div>
+        <div class="col-12 my-2">
+          <textarea class="full-width" placeholder="Add description"></textarea>
+        </div>
+        <div class="col-12 mt-2">
+          <mat-tab-group>
+            <mat-tab label="Comments">Comments </mat-tab>
+            <mat-tab label="History">Hostory </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+      <div class="col-4">
+
+      </div>
     </div>
   </div>
-</div>

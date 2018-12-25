@@ -23,6 +23,10 @@
       </button>
       <span class="logo">Issue tracker</span>
       <span class="spacer"></span>
+      <div class="search-issue-input">
+        <input type="text" #issueSearch placeholder="Search issue" (keyup.enter)="searchIssue(issueSearch.value)">
+        <mat-icon (click)="searchIssue(issueSearch.value)">search</mat-icon>
+      </div>
       <button *ngIf="!(isHandset$ | async)" mat-button [routerLink]="['dashboard']">Dashboard</button>
       <button *ngIf="!(isHandset$ | async)" mat-button [routerLink]="['login']">Login</button>
       <button *ngIf="!(isHandset$ | async)" mat-button (click)="logout()">Logout</button>

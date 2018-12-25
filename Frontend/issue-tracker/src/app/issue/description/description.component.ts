@@ -18,6 +18,32 @@ export class DescriptionComponent implements OnInit {
   constructor(private _route: ActivatedRoute, private router: Router, private appService: AppService, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
+    this._route.params.subscribe(params => {
+      let issueId = this._route.snapshot.paramMap.get('issueId');
+      if(issueId !== 'new') this.getIssue(issueId)
+    });
+  }
+
+  getIssue(issueId) {
+    this.newIssue = false;
+    this.appService.getSingleIssue(issueId).subscribe(
+      response => {
+        this.loading = false;
+        if (response.status === 200) {
+          this.issue = response.data;
+          console.table(response.data)
+        } else {
+          this.snackBar.open(response.message, 'Close', { duration: 4000, });
+          console.log(response.message)
+        }
+      },
+      error => {
+        this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
+        this.loading = false;
+        console.log("some error occured");
+        console.log(error)
+      }  
+    )
   }
 
   createIssue(title) {

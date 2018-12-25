@@ -26,3 +26,22 @@
     -moz-box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
     box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
 }
+
+.issue-options mat-icon {
+    background: rgb(230, 229, 229);
+    border-radius: 50%;
+    cursor: pointer;
+    color: grey;
+    padding: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease
+}
+
+.issue-options mat-icon:hover {
+    background-color: rgb(216, 216, 216);
+    -webkit-box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
+    box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
+}

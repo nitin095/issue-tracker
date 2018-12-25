@@ -5,7 +5,7 @@ import { DescriptionComponent } from './description/description.component';
 import { SearchComponent } from './search/search.component';
 
 const routes: Routes = [
-  { path: 'issue/browse', component: DescriptionComponent },
+  { path: 'issue/browse/:issueId', component: DescriptionComponent },
   { path: 'issue/search', component: SearchComponent },
 ];
 

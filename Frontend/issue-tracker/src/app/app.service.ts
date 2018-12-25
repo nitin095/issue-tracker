@@ -73,12 +73,17 @@ export class AppService {
   }
 
   createIssue(data): Observable<any> {
-    let resposne = this._http.post(`${this.baseUrl}/issues/create?authToken=${this.authToken}`,data)
+    let resposne = this._http.post(`${this.baseUrl}/issues/create?authToken=${this.authToken}`, data)
     return resposne
   }
 
   getIssues(userId): Observable<any> {
     let response = this._http.get(`${this.baseUrl}/issues/all/${userId}?authToken=${this.authToken}`)
+    return response
+  }
+
+  getSingleIssue(issueId): Observable<any> {
+    let response = this._http.get(`${this.baseUrl}/issues/${issueId}/details?authToken=${this.authToken}`)
     return response
   }
 
