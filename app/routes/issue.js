@@ -209,7 +209,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-	app.post(`${baseUrl}/comment/create/:issueId`, auth.isAuthorized, issueController.createComment);
+	app.post(`${baseUrl}/comment/:issueId`, auth.isAuthorized, issueController.createComment);
 
     /**
 	 * @api {post} /api/v1/issues/create Create new issue comment

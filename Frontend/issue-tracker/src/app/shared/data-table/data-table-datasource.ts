@@ -78,6 +78,7 @@ export class DataTableDataSource extends DataSource<DataTableItem> {
         case 'title': return compare(a.title, b.title, isAsc);
         case 'status': return compare(a.status, b.status, isAsc);
         case 'date': return compare(a.createdOn, b.createdOn, isAsc);
+        case 'isFlagged': return compare(a.isFlagged, b.isFlagged, isAsc);
         default: return 0;
       }
     });

@@ -1,6 +1,13 @@
-.container {
+mat-progress-bar {
+    position: fixed;
+    top: 10vh;
+}
+
+.main-container {
     height: 90vh;
-    overflow: hidden;
+    overflow: scroll;
+    padding-left: 5rem;
+    padding-right: 5rem;
 }
 
 .create-issue-input {
@@ -14,11 +21,11 @@
 .create-issue-input input {
     border: none;
     flex-grow: 1;
-    background: none
+    background: none;
 }
 
 .create-issue-input input:focus {
-    outline: none
+    outline: none;
 }
 
 .create-issue-input:hover {
@@ -36,7 +43,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease
+    transition: all 0.3s ease;
 }
 
 .issue-options mat-icon:hover {
@@ -44,4 +51,31 @@
     -webkit-box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
     -moz-box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
     box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
+}
+
+mat-select{
+    background: rgb(230, 229, 229);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: small;
+}
+
+mat-select:hover {
+    background-color: lightgrey;
+}
+
+mat-tab-group {
+}
+
+.py {
+    padding-top: 0.2rem;
+    padding-bottom: 0.3rem;
+}
+
+.col-hover:hover {
+    transition: all 0.3s ease;
+    background-color: whitesmoke;
+    border-radius: 5px;
 }

@@ -20,8 +20,13 @@ export class MainNavComponent {
     );
 
   userDetails = this.appService.getUserInfoFromLocalstorage();
+  url: string = "";
 
-  constructor(private breakpointObserver: BreakpointObserver, private router: Router, private appService: AppService, public snackBar: MatSnackBar) { }
+  constructor(private breakpointObserver: BreakpointObserver, private router: Router, private appService: AppService, public snackBar: MatSnackBar) {
+    router.events.subscribe((val) => {
+      this.url = this.router.url;
+    });
+   }
 
   logout: any = () => {
     this.userDetails = this.appService.getUserInfoFromLocalstorage();

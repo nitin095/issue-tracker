@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { DataTableComponent } from './data-table/data-table.component';
 
 import {
   MatButtonModule,
@@ -24,15 +26,24 @@ import {
   MatDatepickerModule,
   MatNativeDateModule,
   MatDialogModule,
-  MatTabsModule
+  MatTabsModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule
 } from '@angular/material';
 
 @NgModule({
-  declarations: [],
+  declarations: [DataTableComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatIconModule
   ],
   exports: [
+    DataTableComponent,
     MatButtonModule,
     MatCheckboxModule,
     MatToolbarModule,

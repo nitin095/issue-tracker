@@ -2,6 +2,10 @@
   /* height: 100%; */
 }
 
+mat-toolbar {
+  height: 10vh;
+}
+
 .sidenav {
   width: 200px;
 }
@@ -70,4 +74,8 @@ button[mat-button]{
 .search-issue-input input:focus {
   outline: none;
   width: 20vw
+}
+
+mat-icon:focus {
+  outline: none
 }

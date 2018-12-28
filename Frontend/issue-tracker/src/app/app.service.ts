@@ -87,5 +87,28 @@ export class AppService {
     return response
   }
 
+  editIssue(issueId, data): Observable<any> {
+    let response = this._http.put(`${this.baseUrl}/issues/${issueId}/edit?authToken=${this.authToken}`, data)
+    return response
+  }
+
+  createComment(issueId, comment): Observable<any> {
+    let response = this._http.post(`${this.baseUrl}/issues/comment/${issueId}?authToken=${this.authToken}`, comment)
+    return response
+  }
+
+  editComment(issueId, comment_id, body): Observable<any> {
+    let comment = {
+      comment_id: comment_id,
+      body: body
+    }
+    let response = this._http.put(`${this.baseUrl}/issues/${issueId}/edit/comment`, comment)
+    return response
+  }
+
+  deleteComment(issueId, commentId): Observable<any> {
+    let response = this._http.post(`${this.baseUrl}/issues/${issueId}/commentDelete?authToken=${this.authToken}`, { comment_id: commentId })
+    return response
+  }
 
 }

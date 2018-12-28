@@ -7,20 +7,15 @@ import { SharedModule } from './..//shared/shared.module';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
-import { DataTableComponent } from './data-table/data-table.component';
-import { MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
 
 @NgModule({
-  declarations: [LoginComponent, DashboardComponent, ProfileComponent, DataTableComponent],
+  declarations: [LoginComponent, DashboardComponent, ProfileComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    UserRoutingModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
+    UserRoutingModule
   ]
 })
 export class UserModule { }

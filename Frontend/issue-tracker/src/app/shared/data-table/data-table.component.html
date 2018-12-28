@@ -12,33 +12,31 @@
       <td mat-cell *matCellDef="let row">{{row.status}}</td>
     </ng-container>
 
-     <!-- Reporter Column -->
-     <ng-container matColumnDef="reporter">
+    <!-- Reporter Column -->
+    <ng-container matColumnDef="reporter">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Reporter</th>
       <td mat-cell *matCellDef="let row">{{row.reporter}}</td>
     </ng-container>
 
-     <!-- Reporter Column -->
-     <ng-container matColumnDef="date">
+    <!-- Reporter Column -->
+    <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Reported On</th>
       <td mat-cell *matCellDef="let row">{{row.createdOn | date}}</td>
     </ng-container>
 
-     <!-- Flagged Column -->
-     <ng-container matColumnDef="flag">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>isFlagged</th>
-      <td mat-cell *matCellDef="let row">{{row.isFlagged}}</td>
+    <!-- Flagged Column -->
+    <ng-container matColumnDef="flag">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row">
+        <mat-icon class="mr-4" *ngIf="row.isFlagged" style="color:red">flag</mat-icon>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/issue/browse',row.issueId]"></tr>
+    <tr [ngClass]="{'red-bg':row.isFlagged}" mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/issue/browse',row.issueId]"></tr>
   </table>
 
   <!-- [length]="dataSource.data.length" -->
-  <mat-paginator #paginator class="fixed-bottom"
-      
-      [pageIndex]="0"
-      [pageSize]="50"
-      [pageSizeOptions]="[25, 50, 100, 250]">
+  <mat-paginator #paginator class="fixed-bottom" [pageIndex]="0" [pageSize]="50" [pageSizeOptions]="[25, 50, 100, 250]">
   </mat-paginator>
 </div>

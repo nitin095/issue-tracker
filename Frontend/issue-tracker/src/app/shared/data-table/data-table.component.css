@@ -15,3 +15,7 @@ tr[mat-row] {
 tr[mat-row]:hover{
   background: #d5e4fa;
 }
+
+.red-bg {
+  background-color: rgb(252, 222, 222)
+}

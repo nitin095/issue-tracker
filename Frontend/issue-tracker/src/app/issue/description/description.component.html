@@ -1,11 +1,11 @@
-<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<mat-progress-bar mode="indeterminate" color="warn" [style.opacity]="loading ? '1': '0'"></mat-progress-bar>
 <div class="container" *ngIf="newIssue">
   <div class="row py-5">
     <div class="col-auto">
       <span class="heading-2">Create issue</span>
     </div>
   </div>
-  <div class="row align-items-center">
+  <div class="row pb-5 align-items-center">
     <div class="col-12 col-md-8 col-lg-6 create-issue-input">
       <input type="text" #issueTitle placeholder="What needs to be done?" (keyup.enter)="createIssue(issueTitle.value)">
       <button class="my-3" mat-flat-button color="primary" (click)="createIssue(issueTitle.value)">Create</button>
@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="container" *ngIf="issue">
+<div class="container-fluid main-container" *ngIf="issue">
   <div class="row py-5">
     <div class="col-8">
       <div class="row">
@@ -22,20 +22,85 @@
         </div>
         <div class="col-12 my-2 issue-options">
           <mat-icon class="mr-4" matTooltip="Add attachment" matRipple>attachment</mat-icon>
-          <mat-icon matTooltip="Link issue" matRipple>link</mat-icon>
+          <mat-icon class="mr-4" matTooltip="Link issue" matRipple>link</mat-icon>
+          <mat-icon class="mr-4" *ngIf="!issue.isFlagged" matTooltip="Add flag" matRipple (click)="editIssue({isFlagged:true})">outlined_flag</mat-icon>
+          <mat-icon class="mr-4" *ngIf="issue.isFlagged" matTooltip="Remove flag" style="color:red" matRipple (click)="editIssue({isFlagged:false})">flag</mat-icon>
+          <mat-icon matTooltip="Options" matRipple>settings</mat-icon>
         </div>
         <div class="col-12 my-2">
-          <textarea class="full-width" placeholder="Add description"></textarea>
+          <div [innerHTML]="issue.description"></div>
+          <div class="row">
+            <span class="text-muted col py-1 col-hover" *ngIf="!issue.description&&!addDescription" (click)="addDescription=true">Add
+              a
+              description..</span>
+          </div>
+          <angular-editor *ngIf="addDescription" [(ngModel)]="description" [config]="config"></angular-editor>
+          <button *ngIf="addDescription" class="mt-2 mr-2" mat-flat-button color="primary" (click)="addDescription=false;editIssue({description:description})">Save</button>
+          <button *ngIf="addDescription" mat-stroked-button color="primary" (click)="addDescription=false">Cancel</button>
         </div>
         <div class="col-12 mt-2">
           <mat-tab-group>
-            <mat-tab label="Comments">Comments </mat-tab>
-            <mat-tab label="History">Hostory </mat-tab>
+            <mat-tab label="Comments">
+              <div class="container">
+                <div class="row my-3" *ngFor="let comment of issue.comments">
+                  <div class="col-12"><b>{{comment.createdBy}}</b><small class="pl-2 text-muted">{{comment.createdOn |
+                      date:'medium'}}</small></div>
+                  <div class="col-12" style="word-wrap: break-word" [innerHTML]="comment.body"></div>
+                  <div class="col-12" *ngIf="userDetails.userId == comment.createdBy">
+                    <small class="text-muted pr-2 small-link">Edit</small>
+                    <small class="text-muted small-link delete-link" (click)="deleteComment(comment._id)">Delete</small>
+                  </div>
+                </div>
+                <div class="row pt-4">
+                  <div class="col-12">
+                    <angular-editor [(ngModel)]="comment" [config]="config"></angular-editor>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <button mat-flat-button color="primary" class="mr-2" (click)="createComment()">Comment</button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab label="History">
+              <div class="container">
+                <div class="row">
+                  <div class="col text-center text-muted mt-4">No history</div>
+                </div>
+              </div>
+            </mat-tab>
           </mat-tab-group>
         </div>
       </div>
-      <div class="col-4">
+    </div>
+    <div class="col-4">
+      <div class="row">
+        <span class="col-12 heading-sm">Status</span>
+        <div class="col-5">
+          <mat-select [ngModel]="issue.status">
+            <mat-option value="backlog">Backlog</mat-option>
+            <mat-option value="toDo">To Do</mat-option>
+            <mat-option value="done">Done</mat-option>
+            <mat-option value="inProgress">In Progress</mat-option>
+          </mat-select>
+        </div>
+        <span class="col-12 heading-sm mt-4">Assignee</span>
+        <div *ngIf="issue.assignees.length<1" class="col-12 text-muted py col-hover">Unassigned</div>
+        <span class="col-12 heading-sm mt-4">Labels</span>
+        <div *ngIf="issue.labels.length<1" class="col-12 text-muted py col-hover">None</div>
+        <span class="col-12 heading-sm mt-4">Due Date</span>
+        <div class="col-12 text-muted py col-hover" (click)="picker.open()">{{issue.dueDate | date}}<span *ngIf="!issue.dueDate">None</span></div>
 
+        <mat-form-field class="d-none">
+          <input matInput [matDatepicker]="picker" [(ngModel)]="issue.dueDate" (ngModelChange)="editIssue({dueDate:issue.dueDate})"
+            placeholder="None">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
+
+        <span class="col-12 heading-sm mt-4">Reporter</span>
+        <div class="col-12 text-muted py">{{issue.reporter}}</div>
+        <small class="col-12 mt-4 text-muted">Created {{issue.createdOn| date}}</small>
+        <small class="col-12 mt-2 text-muted">Updated {{issue.lastModified | date}}</small>
       </div>
     </div>
   </div>

@@ -93,12 +93,13 @@ let createComment = (req, res) => {
         res.send(apiResponse);
     } else {
         let newComment = {
-            reporter: req.body.reporter,
+            createdBy: req.body.createdBy,
             body: req.body.body
         }
         issueModel.findOneAndUpdate(
             { issueId: req.params.issueId },
             { $push: { comments: newComment } },
+            {new: true},
             (error, result) => {
                 if (error) {
                     console.log('Error Occured.')
@@ -106,12 +107,7 @@ let createComment = (req, res) => {
                     let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                     res.send(apiResponse);
                 } else {
-                    undoReq = {
-                        body: { comment_id: result._id },
-                        params: { issueId: req.params.issueId }
-                    }
-                    undoStack.push({ action: () => deleteComment(undoReq) });
-                    console.log('Success in comment creation')
+                    console.log('Success in comment creation');
                     let apiResponse = response.generate(false, 'Comment created.', 200, result)
                     res.send(apiResponse);
                 }
@@ -201,7 +197,7 @@ let getSingleIssue = (req, res) => {
 // Edit issue
 let editIssue = (req, res) => {
     let options = req.body;
-    issueModel.findOneAndUpdate({ 'issueId': req.params.issueId }, options).exec((err, result) => {
+    issueModel.findOneAndUpdate({ 'issueId': req.params.issueId }, options,{new: true},).exec((err, result) => {
         if (err) {
             console.log(err)
             logger.error(err.message, 'issue Controller:editissue', 10)
@@ -212,8 +208,6 @@ let editIssue = (req, res) => {
             let apiResponse = response.generate(true, 'No issue Found', 404, null)
             res.send(apiResponse)
         } else {
-            delete (result.createdOn)
-            delete (result.lastModified)
             let apiResponse = response.generate(false, 'issue details edited', 200, result)
             if (res) res.send(apiResponse)
         }
@@ -226,7 +220,7 @@ let editIssue = (req, res) => {
 let editComment = (req, res) => {
 
     issueModel.findOneAndUpdate({ 'issueId': req.params.issueId, 'comments._id': req.body.comment_id },
-        { 'comments.$.body': req.body.body }).exec((err, result) => {
+        { 'comments.$.body': req.body.body },{new: true},).exec((err, result) => {
             if (err) {
                 console.log(err)
                 logger.error(err.message, 'issue Controller: editComment', 10)
@@ -312,11 +306,10 @@ let deleteIssue = (req, res) => {
 
 // Delete comment
 let deleteComment = (req, res) => {
-    console.log('ISSUE ID>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', req.params.issueId)
-    console.log('COMMENT ID>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', req.body.comment_id)
-    issueModel.updateOne(
+    issueModel.findOneAndUpdate(
         { issueId: req.params.issueId },
         { $pull: { comments: { _id: req.body.comment_id } } },
+        {new: true},
         (error, result) => {
             if (error) {
                 console.log('Error Occured.')
@@ -324,9 +317,9 @@ let deleteComment = (req, res) => {
                 let apiResponse = response.generate(true, 'Error Occured.', 500, null)
                 res.send(apiResponse);
             } else {
-                console.log('comment deleted')
+                console.log('comment deleted');
                 let apiResponse = response.generate(false, 'Comment created.', 200, result)
-                if (res) res.send(apiResponse);
+                res.send(apiResponse);
             }
         });
 
