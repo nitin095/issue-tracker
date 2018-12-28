@@ -99,7 +99,7 @@ let createComment = (req, res) => {
         issueModel.findOneAndUpdate(
             { issueId: req.params.issueId },
             { $push: { comments: newComment } },
-            {new: true},
+            { new: true },
             (error, result) => {
                 if (error) {
                     console.log('Error Occured.')
@@ -197,7 +197,7 @@ let getSingleIssue = (req, res) => {
 // Edit issue
 let editIssue = (req, res) => {
     let options = req.body;
-    issueModel.findOneAndUpdate({ 'issueId': req.params.issueId }, options,{new: true},).exec((err, result) => {
+    issueModel.findOneAndUpdate({ 'issueId': req.params.issueId }, options, { new: true }).exec((err, result) => {
         if (err) {
             console.log(err)
             logger.error(err.message, 'issue Controller:editissue', 10)
@@ -220,7 +220,7 @@ let editIssue = (req, res) => {
 let editComment = (req, res) => {
 
     issueModel.findOneAndUpdate({ 'issueId': req.params.issueId, 'comments._id': req.body.comment_id },
-        { 'comments.$.body': req.body.body },{new: true},).exec((err, result) => {
+        { 'comments.$.body': req.body.body }, { new: true }).exec((err, result) => {
             if (err) {
                 console.log(err)
                 logger.error(err.message, 'issue Controller: editComment', 10)
@@ -309,7 +309,7 @@ let deleteComment = (req, res) => {
     issueModel.findOneAndUpdate(
         { issueId: req.params.issueId },
         { $pull: { comments: { _id: req.body.comment_id } } },
-        {new: true},
+        { new: true },
         (error, result) => {
             if (error) {
                 console.log('Error Occured.')
@@ -325,6 +325,33 @@ let deleteComment = (req, res) => {
 
 }// end delete issue
 
+let searchIssues = (req, res) => {
+    let search = req.params.search;
+    let keywords = search.split(" ");
+    let strings = keywords.map(x => {
+        if (!isNaN(x)) return ""
+        else return new RegExp(x, 'i')
+    })
+    console.log(keywords)
+    issueModel.find({ title: { $in: strings } })
+        .select(' -__v -_id')
+        .lean()
+        .exec((err, result) => {
+            if (err) {
+                console.log(err)
+                logger.error(err.message, 'Issue Controller: searchIssues', 10)
+                let apiResponse = response.generate(true, 'Failed To search issues', 500, null)
+                res.send(apiResponse)
+            } else if (check.isEmpty(result)) {
+                logger.info('No Issue Found', 'Issue Controller: searchIssues')
+                let apiResponse = response.generate(true, 'No results', 404, null)
+                res.send(apiResponse)
+            } else {
+                let apiResponse = response.generate(false, 'Issues found', 200, result)
+                res.send(apiResponse)
+            }
+        })
+}
 
 module.exports = {
 
@@ -337,5 +364,6 @@ module.exports = {
     editComment: editComment,
     deleteIssue: deleteIssue,
     deleteComment: deleteComment,
+    searchIssues: searchIssues
 
 }// end exports

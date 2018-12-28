@@ -1,13 +1,13 @@
 <div class="container-fluid">
   <div class="row search-header justify-content-center">
     <div class="col-6 my-5">
-      <input type="text" placeholder="Search issues">
-      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Search issues" [(ngModel)]="searchQuery" (keyup.enter)="searchIssues()">
+      <mat-icon (click)="searchIssues()">search</mat-icon>
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <data-table class="full-width"></data-table>
+  <div class="row justify-content-center">
+    <div class="col-10" *ngIf="issues">
+      <data-table [issues]="issues"></data-table>
     </div>
   </div>
 </div>

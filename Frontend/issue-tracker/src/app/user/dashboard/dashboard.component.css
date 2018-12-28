@@ -10,7 +10,7 @@
 
 mat-sidenav-content {
     height: 90vh;
-    overflow: scroll
+    overflow-y: scroll
 }
 
 .header-row{

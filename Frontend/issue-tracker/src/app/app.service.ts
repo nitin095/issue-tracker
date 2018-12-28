@@ -111,4 +111,9 @@ export class AppService {
     return response
   }
 
+  serachIssues(searchQuery): Observable<any> {
+    let response = this._http.get(`${this.baseUrl}/issues/search/${searchQuery}?authToken=${this.authToken}`)
+    return response
+  }
+
 }

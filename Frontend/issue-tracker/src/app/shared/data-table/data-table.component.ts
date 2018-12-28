@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator, MatSort } from '@angular/material';
 import { DataTableDataSource } from './data-table-datasource';
 import { AppService } from './../../app.service';
@@ -13,6 +13,7 @@ export class DataTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: DataTableDataSource;
+  @Input() issues: any;
   userDetails = this.appService.getUserInfoFromLocalstorage();
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -22,23 +23,8 @@ export class DataTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getIssues();
+    console.log(this.issues)
+    this.dataSource = new DataTableDataSource(this.paginator, this.sort, this.issues);
   }
-
-  getIssues() {
-    this.appService.getIssues(this.userDetails.userId).subscribe(
-      response => {
-        if (response.status === 200) {
-          this.dataSource = new DataTableDataSource(this.paginator, this.sort, response.data);
-        } else {
-          console.log(response.message)
-        }
-      },
-      error => {
-        console.log("some error occured");
-        console.log(error)
-      }
-    )
-  }// end  getIssues
 
 }

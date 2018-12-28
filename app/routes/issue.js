@@ -179,6 +179,62 @@ module.exports.setRouter = (app) => {
 	 */
 
 
+	app.get(`${baseUrl}/search/:search`, auth.isAuthorized, issueController.searchIssues);
+
+    /**
+	 * @api {get} /api/v1/issues/:issueId/details Search issues
+	 * @apiVersion 0.0.1
+	 * @apiGroup read
+	 *
+	 * @apiParam {String} authToken The token for authentication.(Send authToken as query parameter, body parameter or as a header)
+	 * @apiParam {String} search search query should be passed as the URL parameter
+	 *
+	 *  @apiSuccessExample {json} Success-Response:
+	 *  {
+	    error: false, 
+		message: "Issue Details Found", 
+		status: 200, 
+		data: {
+			assignees: [array]
+			comments: [array]
+			createdBy: "string"
+			createdOn: "date"
+			dueDate: "date"
+			isDone: boolean
+			isImportant: boolean
+			lastModified: "date"
+			projectId: "string"
+			notes: "string"
+			reminder: Array
+			subIssue: [{
+				assignees: [array]
+				comments: [array]
+				createdBy: "string"
+				dueDate: "date"
+				isDone: boolean
+				title: "string"
+				_id: "string
+				},
+				...
+				]
+			issueId: "string"
+			title: "string"
+			today: boolean
+			_id: "string"
+			}
+	    }
+	  @apiErrorExample {json} Error-Response:
+	 *
+	 * {
+	    "error": true,
+	    "message": "Error Occured.",
+	    "status": 500,
+	    "data": null
+	   }
+	 */
+
+
+
 	app.post(`${baseUrl}/create`, auth.isAuthorized, issueController.createIssue);
 
     /**
