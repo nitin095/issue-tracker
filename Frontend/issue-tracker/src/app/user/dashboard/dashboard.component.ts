@@ -24,7 +24,28 @@ export class DashboardComponent implements OnInit {
     private issueService: IssueService) { }
 
   ngOnInit() {
-  
+    this.getIssues()
   }
+
+  getIssues() {
+    this.loading = true
+    this.appService.getIssues(this.userDetails.userId).subscribe(
+      response => {
+        this.loading = false
+        if (response.status === 200) {
+          console.log(response.data)
+          this.allIssues = response.data
+        } else {
+          console.log(response.message)
+        }
+      },
+      error => {
+        this.loading = false
+        this.allIssues = null
+        console.log("some error occured");
+        console.log(error)
+      }
+    )
+  }// end  getIssues
 
 }

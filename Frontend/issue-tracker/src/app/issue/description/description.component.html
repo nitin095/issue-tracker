@@ -31,23 +31,31 @@
           <div [innerHTML]="issue.description"></div>
           <div class="row">
             <span class="text-muted col py-1 col-hover" *ngIf="!issue.description&&!addDescription" (click)="addDescription=true">Add
-              a
-              description..</span>
+              a description..</span>
           </div>
           <angular-editor *ngIf="addDescription" [(ngModel)]="description" [config]="config"></angular-editor>
           <button *ngIf="addDescription" class="mt-2 mr-2" mat-flat-button color="primary" (click)="addDescription=false;editIssue({description:description})">Save</button>
           <button *ngIf="addDescription" mat-stroked-button color="primary" (click)="addDescription=false">Cancel</button>
         </div>
-        <div class="col-12 mt-2">
+        <div class="col-12 my-2" *ngIf="issue.linkedIssues.length>0">
+          <div class="heading-3">Linked issues</div>
+        </div>
+        <div class="col-12 my-2">
+          <div class="heading-3">Activity</div>
           <mat-tab-group>
             <mat-tab label="Comments">
               <div class="container">
                 <div class="row my-3" *ngFor="let comment of issue.comments">
                   <div class="col-12"><b>{{comment.createdBy}}</b><small class="pl-2 text-muted">{{comment.createdOn |
                       date:'medium'}}</small></div>
-                  <div class="col-12" style="word-wrap: break-word" [innerHTML]="comment.body"></div>
-                  <div class="col-12" *ngIf="userDetails.userId == comment.createdBy">
-                    <small class="text-muted pr-2 small-link">Edit</small>
+                  <div class="col-12" *ngIf="!comment.editComment" style="word-wrap: break-word" [innerHTML]="comment.body"></div>
+                  <div class="col-12" *ngIf="comment.editComment">
+                    <angular-editor [(ngModel)]="comment.body" [config]="config"></angular-editor>
+                    <button class="mt-2 mr-2" mat-flat-button color="primary" (click)="editComment(comment._id,comment.body);comment.editComment=false">Save</button>
+                    <button mat-stroked-button color="primary" (click)="comment.editComment=false">Cancel</button>
+                  </div>
+                  <div class="col-12" *ngIf="!comment.editComment&&userDetails.userId == comment.createdBy">
+                    <small class="text-muted pr-2 small-link" (click)="comment.editComment=true">Edit</small>
                     <small class="text-muted small-link delete-link" (click)="deleteComment(comment._id)">Delete</small>
                   </div>
                 </div>

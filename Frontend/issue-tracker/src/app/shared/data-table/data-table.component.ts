@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, OnChanges ,ViewChild, Input } from '@angular/core';
 import { MatPaginator, MatSort } from '@angular/material';
 import { DataTableDataSource } from './data-table-datasource';
 import { AppService } from './../../app.service';
@@ -9,7 +9,7 @@ import { AppService } from './../../app.service';
   styleUrls: ['./data-table.component.css']
 })
 
-export class DataTableComponent implements OnInit {
+export class DataTableComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: DataTableDataSource;
@@ -23,7 +23,10 @@ export class DataTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.issues)
+    this.dataSource = new DataTableDataSource(this.paginator, this.sort, this.issues);
+  }
+
+  ngOnChanges() {
     this.dataSource = new DataTableDataSource(this.paginator, this.sort, this.issues);
   }
 

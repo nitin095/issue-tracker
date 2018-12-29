@@ -143,7 +143,6 @@ export class DescriptionComponent implements OnInit {
         this.loading = false;
         if (response.status === 200) {
           this.issue = response.data;
-          console.table(response.data)
         } else {
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
           console.log(response.message)

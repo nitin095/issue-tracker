@@ -20,6 +20,11 @@ body{
   font-weight: 500;
 }
 
+.heading-3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
 .heading-sm{
   font-size: small;
   text-transform: uppercase;

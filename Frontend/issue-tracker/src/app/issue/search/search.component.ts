@@ -27,7 +27,6 @@ export class SearchComponent implements OnInit {
     this.appService.serachIssues(this.searchQuery).subscribe(
       response => {
         if (response.status === 200) {
-          console.log(response.data)
           this.issues = response.data
         } else {
           console.log(response.message)

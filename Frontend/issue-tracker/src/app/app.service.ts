@@ -102,7 +102,7 @@ export class AppService {
       comment_id: comment_id,
       body: body
     }
-    let response = this._http.put(`${this.baseUrl}/issues/${issueId}/edit/comment`, comment)
+    let response = this._http.put(`${this.baseUrl}/issues/${issueId}/edit/comment?authToken=${this.authToken}`, comment)
     return response
   }
 

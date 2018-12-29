@@ -1,3 +1,8 @@
+.container-fluid {
+    height: 90vh;
+    overflow-y: scroll
+}
+
 .search-header {
     /* background-color: rgb(63,81,181); */
     /* -webkit-box-shadow: inset 0px -3px 46px -7px rgba(0,0,0,0.75);
