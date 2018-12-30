@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class SearchComponent implements OnInit {
 
   userDetails = this.appService.getUserInfoFromLocalstorage();
+  loading: Boolean;
   issues: any;
   searchQuery: String;
 
@@ -23,16 +24,19 @@ export class SearchComponent implements OnInit {
   }
 
   searchIssues() {
-    console.log(this.searchQuery)
+    this.loading = true;
     this.appService.serachIssues(this.searchQuery).subscribe(
       response => {
+        this.loading = false;
         if (response.status === 200) {
           this.issues = response.data
         } else {
+          this.issues = null;
           console.log(response.message)
         }
       },
       error => {
+        this.loading = false;
         this.issues = null
         console.log("some error occured");
         console.log(error)

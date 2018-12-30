@@ -1,5 +1,5 @@
-<mat-progress-bar mode="indeterminate" [style.opacity]="showProgressBar ? '1': '0'"></mat-progress-bar>
-<div class="container">
+<mat-progress-bar mode="indeterminate" color="warn" *ngIf="loading"></mat-progress-bar>
+<div class="container main">
   <div class="row main-section justify-content-around align-items-center">
     <div class="col">
       <div class="row p-0 justify-content-center">

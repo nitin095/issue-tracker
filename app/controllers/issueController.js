@@ -327,13 +327,8 @@ let deleteComment = (req, res) => {
 
 let searchIssues = (req, res) => {
     let search = req.params.search;
-    let keywords = search.split(" ");
-    let strings = keywords.map(x => {
-        if (!isNaN(x)) return ""
-        else return new RegExp(x, 'i')
-    })
-    console.log(keywords)
-    issueModel.find({ title: { $in: strings } })
+    let keywords = search.split(" ").map(x => new RegExp(x, 'i'));
+    issueModel.find({ title: { $in: keywords } })
         .select(' -__v -_id')
         .lean()
         .exec((err, result) => {

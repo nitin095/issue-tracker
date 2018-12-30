@@ -1,4 +1,4 @@
-<mat-progress-bar mode="indeterminate" color="warn" [style.opacity]="loading ? '1': '0'"></mat-progress-bar>
+<mat-progress-bar mode="indeterminate" color="warn" *ngIf="loading"></mat-progress-bar>
 <div class="container" *ngIf="newIssue">
   <div class="row py-5">
     <div class="col-auto">
@@ -15,20 +15,33 @@
 
 <div class="container-fluid main-container" *ngIf="issue">
   <div class="row py-5">
+
     <div class="col-8">
       <div class="row">
+
+        <!-- issue title -->
         <div class="col-12">
           <span class="heading-2">{{issue.title}}</span>
         </div>
+
+        <!-- issue options -->
         <div class="col-12 my-2 issue-options">
           <mat-icon class="mr-4" matTooltip="Add attachment" matRipple>attachment</mat-icon>
           <mat-icon class="mr-4" matTooltip="Link issue" matRipple>link</mat-icon>
           <mat-icon class="mr-4" *ngIf="!issue.isFlagged" matTooltip="Add flag" matRipple (click)="editIssue({isFlagged:true})">outlined_flag</mat-icon>
           <mat-icon class="mr-4" *ngIf="issue.isFlagged" matTooltip="Remove flag" style="color:red" matRipple (click)="editIssue({isFlagged:false})">flag</mat-icon>
-          <mat-icon matTooltip="Options" matRipple>settings</mat-icon>
+          <mat-icon matTooltip="Options" matRipple [matMenuTriggerFor]="menu">more_horiz</mat-icon>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="deleteIssue()">
+              <mat-icon>delete</mat-icon>
+              <span>Delete issue</span>
+            </button>
+          </mat-menu>
         </div>
+
+        <!-- issue description -->
         <div class="col-12 my-2">
-          <div [innerHTML]="issue.description"></div>
+          <div *ngIf="issue.description&&!addDescription" [innerHTML]="issue.description | sanitizedHTML" (click)="addDescription=true;description=issue.description"></div>
           <div class="row">
             <span class="text-muted col py-1 col-hover" *ngIf="!issue.description&&!addDescription" (click)="addDescription=true">Add
               a description..</span>
@@ -37,26 +50,46 @@
           <button *ngIf="addDescription" class="mt-2 mr-2" mat-flat-button color="primary" (click)="addDescription=false;editIssue({description:description})">Save</button>
           <button *ngIf="addDescription" mat-stroked-button color="primary" (click)="addDescription=false">Cancel</button>
         </div>
+
+        <!-- linked issues -->
         <div class="col-12 my-2" *ngIf="issue.linkedIssues.length>0">
           <div class="heading-3">Linked issues</div>
         </div>
-        <div class="col-12 my-2">
-          <div class="heading-3">Activity</div>
-          <mat-tab-group>
+
+        <!-- issue activity -->
+        <div class="col-12 my-4">
+          <div class="heading-3 mb-2">Activity</div>
+
+          <mat-tab-group mat-align-tabs="start">
             <mat-tab label="Comments">
               <div class="container">
-                <div class="row my-3" *ngFor="let comment of issue.comments">
-                  <div class="col-12"><b>{{comment.createdBy}}</b><small class="pl-2 text-muted">{{comment.createdOn |
-                      date:'medium'}}</small></div>
-                  <div class="col-12" *ngIf="!comment.editComment" style="word-wrap: break-word" [innerHTML]="comment.body"></div>
-                  <div class="col-12" *ngIf="comment.editComment">
-                    <angular-editor [(ngModel)]="comment.body" [config]="config"></angular-editor>
-                    <button class="mt-2 mr-2" mat-flat-button color="primary" (click)="editComment(comment._id,comment.body);comment.editComment=false">Save</button>
-                    <button mat-stroked-button color="primary" (click)="comment.editComment=false">Cancel</button>
+                <div class="row my-3 justify-content-end">
+                  <small class="col-auto text-muted">{{issue.comments.length}} Comments </small>
+                  <small class="col-auto sort-col text-muted">
+                    <mat-icon>sort</mat-icon>Sort by<span>Newest first</span><span>Oldest first</span>
+                  </small>
+                </div>
+                <div class="row my-4" *ngFor="let comment of issue.comments">
+                  <div class="col-1 user-circle">
+                    <span>{{comment.createdBy | userName: 'initials' | async | uppercase}}</span>
                   </div>
-                  <div class="col-12" *ngIf="!comment.editComment&&userDetails.userId == comment.createdBy">
-                    <small class="text-muted pr-2 small-link" (click)="comment.editComment=true">Edit</small>
-                    <small class="text-muted small-link delete-link" (click)="deleteComment(comment._id)">Delete</small>
+                  <div class="col-11">
+                    <div class="row">
+                      <div class="col-auto comment-body">
+                        <b>{{comment.createdBy | userName | async}}</b>
+                        <p *ngIf="!comment.editComment" [innerHTML]="comment.body | sanitizedHTML"></p>
+                      </div>
+                      <div class="col-12" *ngIf="comment.editComment">
+                        <angular-editor [(ngModel)]="comment.body" [config]="config"></angular-editor>
+                        <button class="mt-2 mr-2" mat-flat-button color="primary" (click)="editComment(comment._id,comment.body);comment.editComment=false">Save</button>
+                        <button mat-stroked-button color="primary" (click)="comment.editComment=false">Cancel</button>
+                      </div>
+                      <div class="col-12" *ngIf="!comment.editComment&&userDetails.userId == comment.createdBy">
+                        <small class="text-muted">{{comment.createdOn | date:'medium'}}</small>
+                        <small class="text-muted px-3 small-link" (click)="comment.editComment=true">Edit</small>
+                        <small class="text-muted small-link delete-link" (click)="deleteComment(comment._id)">Delete</small>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="row pt-4">
@@ -77,27 +110,49 @@
               </div>
             </mat-tab>
           </mat-tab-group>
+
         </div>
+        <!-- end issue activity -->
+
       </div>
     </div>
+
+    <!-- side col -->
     <div class="col-4">
-      <div class="row">
+
+      <!-- issue status -->
+      <div class="row side-col">
         <span class="col-12 heading-sm">Status</span>
-        <div class="col-5">
-          <mat-select [ngModel]="issue.status">
+        <div class="col-12 col-md-7 col-lg-6 col-xl-5">
+          <mat-select [(ngModel)]="issue.status" (ngModelChange)="editIssue({status:issue.status})"
+            disableOptionCentering="true">
             <mat-option value="backlog">Backlog</mat-option>
             <mat-option value="toDo">To Do</mat-option>
-            <mat-option value="done">Done</mat-option>
             <mat-option value="inProgress">In Progress</mat-option>
+            <mat-option value="done">Done</mat-option>
           </mat-select>
         </div>
+
+        <!-- issue assignees -->
         <span class="col-12 heading-sm mt-4">Assignee</span>
         <div *ngIf="issue.assignees.length<1" class="col-12 text-muted py col-hover">Unassigned</div>
+
+        <!-- issue labels -->
         <span class="col-12 heading-sm mt-4">Labels</span>
-        <div *ngIf="issue.labels.length<1" class="col-12 text-muted py col-hover">None</div>
+        <div class="col-12 py col-hover">
+          <mat-chip-list #chipList>
+            <mat-chip class="py-1" *ngFor="let label of issue.labels" selectable="true" removable="true" (removed)="removeLabel(label)">
+              {{label}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Add labels" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addLabel($event)">
+          </mat-chip-list>
+        </div>
+
+        <!-- issue due date -->
         <span class="col-12 heading-sm mt-4">Due Date</span>
         <div class="col-12 text-muted py col-hover" (click)="picker.open()">{{issue.dueDate | date}}<span *ngIf="!issue.dueDate">None</span></div>
-
         <mat-form-field class="d-none">
           <input matInput [matDatepicker]="picker" [(ngModel)]="issue.dueDate" (ngModelChange)="editIssue({dueDate:issue.dueDate})"
             placeholder="None">
@@ -105,10 +160,20 @@
           <mat-datepicker touchUi #picker></mat-datepicker>
         </mat-form-field>
 
+        <!-- issue reporter -->
         <span class="col-12 heading-sm mt-4">Reporter</span>
-        <div class="col-12 text-muted py">{{issue.reporter}}</div>
+        <div class="col-12 text-muted py">{{issue.reporter | userName | async}}</div>
+
+        <!-- issue timestamps -->
         <small class="col-12 mt-4 text-muted">Created {{issue.createdOn| date}}</small>
         <small class="col-12 mt-2 text-muted">Updated {{issue.lastModified | date}}</small>
+
       </div>
     </div>
+    <!-- end  side col -->
+
   </div>
+  <!-- end main row -->
+
+</div>
+<!-- end container -->

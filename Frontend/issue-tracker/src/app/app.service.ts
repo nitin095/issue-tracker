@@ -78,6 +78,7 @@ export class AppService {
   }
 
   getIssues(userId): Observable<any> {
+    this.authToken = Cookie.get('authtoken');
     let response = this._http.get(`${this.baseUrl}/issues/all/${userId}?authToken=${this.authToken}`)
     return response
   }
@@ -89,6 +90,11 @@ export class AppService {
 
   editIssue(issueId, data): Observable<any> {
     let response = this._http.put(`${this.baseUrl}/issues/${issueId}/edit?authToken=${this.authToken}`, data)
+    return response
+  }
+
+  deleteIssue(projectId, issueId): Observable<any> {
+    let response = this._http.post(`${this.baseUrl}/issues/${issueId}/delete?authToken=${this.authToken}`, { projectId: projectId })
     return response
   }
 

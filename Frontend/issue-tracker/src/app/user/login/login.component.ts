@@ -12,7 +12,7 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 export class LoginComponent implements OnInit {
 
-  showProgressBar: Boolean = false;
+  loading: Boolean = false;
 
   //models
   public email: String;
@@ -37,42 +37,34 @@ export class LoginComponent implements OnInit {
   }
 
   login(): any {
-
+    this.loading = true;
     let loginData = {
       email: this.email,
       password: this.password,
-    }// end login data
-
-    console.log(loginData)
+    }
 
     this.appService.login(loginData).subscribe(
-
       response => {
         if (response.status === 200) {
-          console.log(response)
-
           Cookie.set('authtoken', response.data.authToken);
-
           Cookie.set('receiverId', response.data.userDetails.userId);
-
           Cookie.set('receiverName', response.data.userDetails.firstName + ' ' + response.data.userDetails.lastName);
-
           this.appService.setUserInfoInLocalStorage(response.data.userDetails)
 
           setTimeout(() => {
-            this.showProgressBar = false;
+            this.loading = false;
             this.router.navigate(['/dashboard']);
           }, 1000)
 
         } else {
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
-          this.showProgressBar = false;
+          this.loading = false;
           console.log(response.message)
         }
       },
       error => {
         this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
-        this.showProgressBar = false;
+        this.loading = false;
         console.log("some error occured");
         console.log(error)
       }
@@ -82,36 +74,37 @@ export class LoginComponent implements OnInit {
   }//end login function
 
   forgotPassword() {
-    this.showProgressBar = true;
+    this.loading = true;
     if (!this.email) {
       this.snackBar.open('Enter your Email', 'Close', { duration: 4000 })
-      this.showProgressBar = false;
+      this.loading = false;
       return
     }
     this.appService.recoverPassword({ email: this.email }).subscribe(
       response => {
+        this.loading = false;
         if (response.status === 200) this.snackBar.open('Password reset link sent to your email', 'Ok');
         else this.snackBar.open(response.message, 'Close');
-        this.showProgressBar = false;
         console.log(response);
       },
       error => {
         this.snackBar.open(error.error.message || 'Some  error  occured', 'Close');
-        this.showProgressBar = false;
+        this.loading = false;
         console.log(error)
       }
     )
   }// end forogotPassword
 
   resetPassword(): any {
+    this.loading = true;
     if (!this.password || !this.retypePassword) {
       this.snackBar.open('Enter password', 'Close')
-      this.showProgressBar = false;
+      this.loading = false;
       return
     }
     if (this.password !== this.retypePassword) {
       this.snackBar.open('Passwords do not match', 'Close')
-      this.showProgressBar = false;
+      this.loading = false;
       return
     } else {
       let resetData = {
@@ -120,6 +113,7 @@ export class LoginComponent implements OnInit {
       }
       this.appService.resetPassword(resetData).subscribe(
         response => {
+          this.loading = false;
           if (response.status === 200) {
             console.log(response)
             this.snackBar.open('Password changed sucessfully', 'Close')
@@ -128,9 +122,9 @@ export class LoginComponent implements OnInit {
             this.snackBar.open(`${response.message}! This link is expired. Send new password change request.`, 'Close');
             console.log(response)
           }
-          this.showProgressBar = false;
         },
         error => {
+          this.loading = false;
           this.snackBar.open(error.error.message)
           console.log(error)
         }

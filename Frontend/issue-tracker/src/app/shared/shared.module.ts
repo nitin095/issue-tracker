@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DataTableComponent } from './data-table/data-table.component';
-
+import { UserNamePipe } from './user-name.pipe';
+import { SanitizedHTMLPipe } from './sanitized-html.pipe';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -33,7 +34,7 @@ import {
 } from '@angular/material';
 
 @NgModule({
-  declarations: [DataTableComponent],
+  declarations: [DataTableComponent, UserNamePipe, SanitizedHTMLPipe],
   imports: [
     CommonModule,
     RouterModule,
@@ -66,7 +67,9 @@ import {
     MatDatepickerModule,
     MatNativeDateModule,
     MatDialogModule,
-    MatTabsModule
+    MatTabsModule,
+    UserNamePipe,
+    SanitizedHTMLPipe
   ]
 })
 export class SharedModule { }

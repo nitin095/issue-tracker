@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit {
 
   userDetails = this.appService.getUserInfoFromLocalstorage();
   loading: Boolean = false;
+  isDrawerOpened: Boolean = true;
   allIssues: any;
 
   constructor(
