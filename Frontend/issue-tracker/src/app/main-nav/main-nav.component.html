@@ -1,9 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
-      [ngClass]="{'d-none': !(isHandset$ | async)}"
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="!(isHandset$ | async)">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [ngClass]="{'d-none': !(isHandset$ | async)}" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item href="#">Link 1</a>
@@ -13,12 +10,7 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span class="logo">Issue tracker</span>
@@ -27,10 +19,14 @@
         <input type="text" #issueSearch placeholder="Search issue" (keyup.enter)="router.navigate(['issue/search',issueSearch.value])">
         <mat-icon [routerLink]="['issue/search',issueSearch.value]">search</mat-icon>
       </div>
-      <button *ngIf="!(isHandset$ | async)&&url.includes('issue')" mat-button [routerLink]="['dashboard']">Dashboard</button>
+      <button *ngIf="!(isHandset$ | async)&&url.includes('issue')||url.includes('project')||url.includes('profile')" mat-button [routerLink]="['dashboard']">Dashboard</button>
       <button *ngIf="!(isHandset$ | async)&&url.includes('home')" mat-button [routerLink]="['login']">Login</button>
       <button *ngIf="!(isHandset$ | async)&&url.includes('login')" mat-button [routerLink]="['home']">Signup</button>
-      <button *ngIf="!(isHandset$ | async)&&!url.includes('home')&&!url.includes('login')" mat-button (click)="logout()">Logout</button>
+      <button *ngIf="!(isHandset$ | async)&&!url.includes('home')&&!url.includes('login')" mat-button [matMenuTriggerFor]="menu">{{userDetails.firstName}} {{userDetails.lastName}}</button>
+      <mat-menu #menu="matMenu">
+          <button mat-menu-item [routerLink]="['profile']">Profile</button>
+        <button mat-menu-item (click)="logout()">Logout</button>
+      </mat-menu>
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>

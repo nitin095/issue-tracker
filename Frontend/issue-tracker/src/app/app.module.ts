@@ -11,17 +11,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
-import { AppService } from "./app.service"
+import { AppService } from "./app.service";
+import { ProjectComponent } from './project/project.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     MainNavComponent,
     HomeComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ProjectComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +36,7 @@ import { AppService } from "./app.service"
     SharedModule,
     IssueModule,
     UserModule,
+    AngularEditorModule,
     AppRoutingModule
   ],
   providers: [AppService],

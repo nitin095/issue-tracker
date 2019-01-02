@@ -7,7 +7,7 @@
         <h1 *ngIf="resetForm" class="lead pt-0 pb-4" style="font-size:2rem">Reset your password</h1>
       </div>
       <div class="row justify-content-center">
-        <mat-card *ngIf="loginForm" class="col-auto mx-2" [ngClass]="{backdrop: showProgressBar}">
+        <mat-card *ngIf="loginForm" class="col-auto mx-2" [ngClass]="{backdrop: loading}">
           <mat-card-header>
             <mat-card-title>Enter email and password</mat-card-title>
           </mat-card-header>
@@ -21,14 +21,14 @@
               <div class="row">
                 <mat-form-field class="col">
                   <input matInput placeholder="Password" name="password" required [type]="hide ? 'password' : 'text'"
-                    [(ngModel)]="password" (keyup.enter)="showProgressBar=true;login()">
+                    [(ngModel)]="password" (keyup.enter)="loading=true;login()">
                   <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </mat-form-field>
               </div>
             </form>
           </mat-card-content>
           <mat-card-actions>
-            <button class="login-btn" [ngClass]="{backdrop: showProgressBar}" mat-flat-button (click)="showProgressBar=true;login()">LOGIN</button>
+            <button class="login-btn" [ngClass]="{backdrop: loading}" mat-flat-button (click)="loading=true;login()">LOGIN</button>
           </mat-card-actions>
         </mat-card>
         <mat-card *ngIf="forgotForm" class="col-auto col-md-4 mx-2">
@@ -67,14 +67,14 @@
               <div class="row">
                 <mat-form-field class="col">
                   <input matInput placeholder="Retype password" name="retypePassword" required [type]="hide ? 'password' : 'text'"
-                    [(ngModel)]="retypePassword" (keyup.enter)="showProgressBar=true;resetPassword()">
+                    [(ngModel)]="retypePassword" (keyup.enter)="loading=true;resetPassword()">
                   <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </mat-form-field>
               </div>
             </form>
           </mat-card-content>
           <mat-card-actions>
-            <button class="reset-btn" mat-flat-button (click)="showProgressBar=true;resetPassword()">RESET PASSWORD</button>
+            <button class="reset-btn" mat-flat-button (click)="loading=true;resetPassword()">RESET PASSWORD</button>
           </mat-card-actions>
         </mat-card>
       </div>

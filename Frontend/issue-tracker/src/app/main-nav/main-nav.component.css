@@ -79,3 +79,7 @@ button[mat-button]{
 mat-icon:focus {
   outline: none
 }
+
+.mat-menu-item {
+  outline: none
+}

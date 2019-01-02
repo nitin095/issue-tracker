@@ -146,7 +146,6 @@ let getAllIssues = (req, res) => {
 // Get all Project issues
 let getProjectIssues = (req, res) => {
     let filter = req.query.fields ? req.query.fields.replace(new RegExp(";", 'g'), " ") : '';
-    // issueModel.find({ 'reporter': req.query.userId })
     issueModel.find({ projectId: req.params.projectId })
         .select(`-__v ${filter}`)
         .lean()
@@ -324,6 +323,7 @@ let deleteComment = (req, res) => {
         });
 
 }// end delete issue
+
 
 let searchIssues = (req, res) => {
     let search = req.params.search;

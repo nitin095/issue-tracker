@@ -33,7 +33,7 @@ let projectSchema = new Schema({
         type: String,
         default: ''
     },
-    collaborators: [],
+    team: [],
     isStarred: {
         type: Boolean,
         default: false

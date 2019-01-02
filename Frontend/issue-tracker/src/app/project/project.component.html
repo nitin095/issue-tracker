@@ -1,0 +1,152 @@
+<mat-progress-bar mode="indeterminate" color="warn" *ngIf="loading"></mat-progress-bar>
+<div class="container" *ngIf="newProject">
+  <div class="row py-5">
+    <div class="col-auto">
+      <span class="heading-2">Create new project</span>
+    </div>
+  </div>
+  <div class="row pb-5 align-items-center">
+    <div class="col-12 col-md-8 col-lg-6 create-project-input">
+      <input type="text" #projectTitle placeholder="What's the name of your project?" (keyup.enter)="createProject(projectTitle.value)">
+      <button class="my-3" mat-flat-button color="primary" (click)="createProject(projectTitle.value)">Create</button>
+    </div>
+  </div>
+  <div class="row pb-4" *ngIf="projectTeam.length>0">
+    <div class="col-12 pb-2">
+      <span class="heading-3">Team members</span>
+    </div>
+    <div class="col">
+      <mat-chip-list>
+        <mat-chip *ngFor="let member of projectTeam" removable="true" (removed)="removeMember(fruit)">{{member |
+          userName |
+          async}} <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+  <div class="row pb-4">
+    <div class="col-auto">
+      <span class="heading-3">Add your team members</span>
+    </div>
+  </div>
+  <div class="row pb-5 align-items-center">
+    <div class="col-12 col-md-8 col-lg-6 py-2 add-team-input">
+      <input type="text" #search placeholder="Search team member by name, email or mobile." (keyup.enter)="launchRipple();searchUsers(search.value)">
+      <mat-icon matRipple matRippleUnbounded="true" matRippleCentered="true" matRippleRadius="30" matRippleColor="rgba(25, 123, 216, 0.5)"
+        (click)="searchUsers(search.value)">search</mat-icon>
+    </div>
+  </div>
+  <div class="row mb-4" *ngIf="users">
+    <div class="col-auto" *ngFor="let user of users">
+      <mat-card (click)="addMember(user.userId)">
+        <mat-card-header class="align-items-center">
+          <div mat-card-avatar class="example-header-image m-0 p-0">{{user.firstName[0]}}{{user.lastName[0]}}</div>
+          <mat-card-title class="m-0 p-0">{{user.firstName}} {{user.lastName}}</mat-card-title>
+          <mat-card-subtitle class="m-0 p-0">{{user.email}}</mat-card-subtitle>
+          <mat-card-subtitle class="m-0 p-0">{{user.mobileNumber}}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="project">
+  <div class="row py-5">
+
+    <!-- project title -->
+    <div class="col-12">
+      <span class="heading-2">{{project.title}}</span>
+    </div>
+
+    <!-- project options -->
+    <div class="col-12 my-2 project-options">
+      <mat-icon class="mr-4" matTooltip="Add attachment" matRipple>attachment</mat-icon>
+      <mat-icon class="mr-4" *ngIf="!project.isStarred" matTooltip="Add star" matRipple (click)="editproject({isStarred:true})">star_border</mat-icon>
+      <mat-icon class="mr-4" *ngIf="project.isStarred" matTooltip="Remove star" style="color:goldenrod" matRipple
+        (click)="editproject({isStarred:false})">star</mat-icon>
+      <mat-icon matTooltip="Options" matRipple [matMenuTriggerFor]="menu">more_horiz</mat-icon>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="deleteproject()">
+          <mat-icon>delete</mat-icon>
+          <span>Delete project</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    <!-- project description -->
+    <div class="col-12 my-2">
+      <div *ngIf="project.description&&!addDescription" [innerHTML]="project.description | sanitizedHTML" (click)="addDescription=true;description=project.description"></div>
+      <div class="row">
+        <span class="text-muted col py-1 col-hover" *ngIf="!project.description&&!addDescription" (click)="addDescription=true">Add
+          a description..</span>
+      </div>
+      <angular-editor *ngIf="addDescription" [(ngModel)]="description" [config]="config"></angular-editor>
+      <button *ngIf="addDescription" class="mt-2 mr-2" mat-flat-button color="primary" (click)="addDescription=false;editproject({description:description})">Save</button>
+      <button *ngIf="addDescription" mat-stroked-button color="primary" (click)="addDescription=false">Cancel</button>
+    </div>
+
+    <!-- project team -->
+    <span class="col-12 mt-4 mb-2 heading-3">Team</span>
+    <div class="col-auto" *ngFor="let member of project.team">
+      <mat-card class="team-card">
+        {{member | userName | async}}
+      </mat-card>
+    </div>
+    <div class="col-auto">
+      <mat-card matRipple class="team-card add" (click)="addProjectMember=true">
+        <mat-icon>add</mat-icon>
+      </mat-card>
+    </div>
+
+    <!-- project reporter -->
+    <span class="col-12 heading-3 mt-5">Created by</span>
+    <div class="col-auto py-2">
+      <mat-card class="team-card">
+        {{project.createdBy | userName | async}}
+      </mat-card>
+    </div>
+
+    <!-- project timestamps -->
+    <small class="col-12 mt-4 text-muted">Created {{project.createdOn| date}}</small>
+    <small class="col-12 mt-2 text-muted">Updated {{project.lastModified | date}}</small>
+
+  </div>
+  <!-- end main row -->
+
+  <!-- add team member container -->
+  <div class="add-member-container" *ngIf="addProjectMember">
+    <div class="container px-5">
+      <div class="row py-5 justify-content-between">
+        <div class="col-auto">
+          <span class="heading-3">Add team members</span>
+        </div>
+        <div class="col-auto">
+          <mat-icon class="close-icon" (click)="addProjectMember=false">close</mat-icon>
+        </div>
+      </div>
+      <div class="row pb-3 align-items-center">
+        <div class="col-12 add-team-input">
+          <input type="text" #search placeholder="Search by name, email or mobile." (keyup.enter)="launchRipple();searchUsers(search.value)">
+          <mat-icon matRipple matRippleUnbounded="true" matRippleCentered="true" matRippleRadius="30" matRippleColor="rgba(25, 123, 216, 0.5)"
+            (click)="searchUsers(search.value)">search</mat-icon>
+        </div>
+      </div>
+      <div class="row mb-4" *ngIf="users">
+        <div class="col-auto my-2" *ngFor="let user of users">
+          <mat-card matRipple (click)="addMember(user.userId)" [ngClass]="{'already-member-card':project.team.includes(user.userId)}">
+            <mat-card-header class="align-items-center">
+              <div mat-card-avatar class="example-header-image m-0 p-0">
+                <span *ngIf="!project.team.includes(user.userId)">{{user.firstName[0]}}{{user.lastName[0]}}</span>
+                <mat-icon *ngIf="project.team.includes(user.userId)">done</mat-icon>
+              </div>
+              <mat-card-title class="m-0 p-0">{{user.firstName}} {{user.lastName}}</mat-card-title>
+              <mat-card-subtitle class="m-0 p-0">{{user.email}}</mat-card-subtitle>
+              <mat-card-subtitle class="m-0 p-0">{{user.mobileNumber}}</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

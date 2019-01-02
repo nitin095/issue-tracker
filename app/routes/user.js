@@ -84,6 +84,42 @@ module.exports.setRouter = (app) => {
 	 */
 
 
+	app.get(`${baseUrl}/search/:userId/:searchQuery`, auth.isAuthorized, userController.searchUsers);
+
+    /**
+	 * @api {get} /api/v1/users/:userId/details Search users
+	 * @apiVersion 0.0.1
+	 * @apiGroup read
+	 *
+	 * @apiParam {String} authToken The token for authentication.(Send authToken as query parameter, body parameter or as a header)
+	 * @apiParam {String} searchQuery searchQuery should be passed as the URL parameter
+	 *
+	 *  @apiSuccessExample {json} Success-Response:
+	 *  {
+	    "error": false,
+	    "message": "User Found Successfully.",
+	    "status": 200,
+	    "data": {
+            userId: "string",
+            firstName: "string",
+            lastName: "string",
+            email: "mstring",
+            countryCode: number,
+            mobileNumber: number,
+            createdOn: "Date",
+				}
+	    }
+	  @apiErrorExample {json} Error-Response:
+	 *
+	 * {
+	    "error": true,
+	    "message": "Error Occured.",
+	    "status": 500,
+	    "data": null
+	   }
+	 */
+
+
     app.post(`${baseUrl}/signup`, userController.signUpFunction);
 
     /**

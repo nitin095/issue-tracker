@@ -16,6 +16,7 @@ mat-progress-bar {
 
 .side-bar {
     background-color: whitesmoke;
+    border-right: 0.5px solid lightgrey;
     z-index: 2;
 }
 
@@ -44,6 +45,43 @@ mat-sidenav-content {
     background: #fff;
     z-index: 1;
     background: whitesmoke  
+}
+
+/* .header-row > div:first-child {
+    flex-grow: 1;
+    background: red
+} */
+
+.header-row input {
+    width: 100%;
+    border: none;
+    padding: 0.2rem 0.5rem;
+    border-radius: 8px;
+}
+
+.header-row input:focus {
+    outline: none
+}
+
+.header-row input::placeholder {
+    color: rgb(184, 182, 182)
+}
+
+.header-row mat-select {
+    background-color: #fff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 8px;
+}
+
+.header-row mat-select::before {
+    content: "Filter by reporter";
+    position: absolute;
+    top: -1rem;
+    text-transform: uppercase;
+    font-size: x-small;
+    font-weight: 600;
+    color: rgb(172, 171, 171);
+    letter-spacing: 0.5px
 }
 
 .issue-count {
@@ -90,4 +128,17 @@ mat-nav-list mat-icon{
 
 mat-nav-list a {
     font-size: 0.85rem;
+}
+
+.project-select mat-select {
+    background-color: #fff;
+    padding: 0.8rem 0.5rem;
+    border-radius: 10px
+}
+
+.project-select p {
+    text-transform: uppercase;
+    font-size: x-small;
+    font-weight: 600;
+    letter-spacing: 0.5px
 }

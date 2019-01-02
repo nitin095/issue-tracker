@@ -421,6 +421,48 @@ let logout = (req, res) => {
 } // end logout function.
 
 
+// search users function
+let searchUsers = (req, res) => {
+    let search = req.params.searchQuery;
+    let keywords = search.split(" ");
+    let strings = keywords.map(x => {
+        if (!isNaN(x)) return ""
+        else return new RegExp(x, 'i')
+    })
+    let numbers = keywords.map(x => {
+        if (!isNaN(x)) return x
+        else return null
+    })
+
+    UserModel.find({
+        $or: [
+            { firstName: { $in: strings } },
+            { lastName: { $in: strings } },
+            { email: { $in: strings } },
+            { mobileNumber: { $in: numbers } }
+        ]
+    })
+        .select(' -__v -_id -password -createdOn -lastModified')
+        .lean()
+        .exec((err, users) => {
+            if (err) {
+                console.log(err)
+                logger.error(err.message, 'User Controller: searchUsers', 10)
+                let apiResponse = response.generate(true, 'Failed To search users', 500, null)
+                res.send(apiResponse)
+            } else if (check.isEmpty(users)) {
+                logger.info('No user Found', 'User Controller: searchUsers')
+                let apiResponse = response.generate(true, 'No user found', 404, null)
+                res.send(apiResponse)
+            } else {
+                users = users.filter(user => user.userId !== req.params.userId)
+                let apiResponse = response.generate(false, 'users found', 200, users)
+                res.send(apiResponse)
+            }
+        })
+}// end searchUsers
+
+
 // getAllAuths function
 let getAllAuths = (req, res) => {
 
@@ -444,6 +486,7 @@ module.exports = {
     logout: logout,
     forgotPassword: forgotPassword,
     resetPassword: resetPassword,
-    getAllAuths: getAllAuths
+    getAllAuths: getAllAuths,
+    searchUsers: searchUsers
 
 }// end exports

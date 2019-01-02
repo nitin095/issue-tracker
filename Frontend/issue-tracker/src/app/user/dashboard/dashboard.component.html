@@ -35,21 +35,49 @@
                         <a mat-list-item>
                             <mat-icon>remove_red_eye</mat-icon>Watching
                         </a>
-                        <span class="spacer"></span>
                         <a mat-list-item [routerLink]="['/issue/browse','new']">
                             <mat-icon>bug_report</mat-icon>Report new issue
                         </a>
+                        <span class="spacer"></span>
+                        <a class="project-select p-3">
+                            <p class="mb-0 ml-1 mb-2">Project</p>
+                            <mat-select [(ngModel)]="activeProject">
+                                <mat-option *ngFor="let project of allprojects" [value]="project.projectId">
+                                    {{project.title}}
+                                </mat-option>
+                                <mat-option [routerLink]="['/project','new']">
+                                    <mat-icon>add</mat-icon>Create new project
+                                </mat-option>
+                            </mat-select>
+                        </a>
+                        <a class="row no-gutters justify-content-center">
+                            <button mat-stroked-button [routerLink]="['/project',activeProject]">Manage project</button>
+                        </a>
                     </mat-nav-list>
+
                 </mat-sidenav>
                 <mat-sidenav-content>
                     <div class="container-fluid">
                         <div class="row py-4 header-row sticky-top align-items-center">
-                            <div class="col-auto display-4 title">
-                                Assigned Issues
-                            </div>
-                            <div class="col-auto issue-count ml-auto">
+                            <div class="col">
                                 <div class="row">
-                                    <div class="col-auto">
+                                    <div class="col-12 display-4 title mb-2">Assigned Issues</div>
+                                    <div class="col-8">
+                                        <input (keyup)="filterIssues($event.target.value)" placeholder="Filter by title, status or date">
+                                    </div>
+                                    <div class="col-4">
+                                        <mat-select [(ngModel)]="selectedReporter" (ngModelChange)="filterReporter(selectedReporter)"
+                                            disableOptionCentering="true">
+                                            <mat-option *ngFor="let reporter of allReporters" [value]="reporter">
+                                                {{reporter | userName | async}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto issue-count ml-auto" *ngIf="issues">
+                                <div class="row">
+                                    <div class="col-auto" (click)="resetIssues()">
                                         <div class="row">
                                             <div class="col-12 display-4 text-center">{{allIssues.length}}</div>
                                             <small class="col-12 text-center">Issues</small>
@@ -58,20 +86,20 @@
                                     <div class="col">
                                         <div class="row filters">
                                             <div class="col-auto">
-                                                <small><b>1</b> In progress</small><br>
-                                                <small><b>1</b> To Do</small>
+                                                <small (click)="filterIssues('InProgress')"><b>1</b> In progress</small><br>
+                                                <small (click)="filterIssues('todo')"><b>1</b> To Do</small>
                                             </div>
                                             <div class="col-auto">
-                                                <small><b>1</b> Done</small><br>
-                                                <small><b>11</b> Backlog</small>
+                                                <small (click)="filterIssues('done')"><b>1</b> Done</small><br>
+                                                <small (click)="filterIssues('backlog')"><b>11</b> Backlog</small>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row" *ngIf="allIssues">
-                            <data-table [issues]="allIssues" class="full-width"></data-table>
+                        <div class="row" *ngIf="issues">
+                            <data-table [issues]="issues" class="full-width"></data-table>
                         </div>
                     </div>
 

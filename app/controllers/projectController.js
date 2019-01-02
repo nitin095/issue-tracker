@@ -22,9 +22,10 @@ let createProject = (req, res) => {
         let projectId = shortid.generate()
         let newProject = new projectModel({
             projectId: projectId,
-            projectKey: req.body.projectKey,
+            key: req.body.key,
             createdBy: req.body.createdBy,
             title: req.body.title,
+            team: req.body.team
         }) // end new project model
 
         newProject.save((err, result) => {
@@ -47,7 +48,7 @@ let createProject = (req, res) => {
 // Get all project details 
 let getAllProjects = (req, res) => {
 
-    projectModel.find({ "collaborators": req.params.userId })
+    projectModel.find({ "createdBy": req.params.userId })
         .select(' -__v -_id')
         .lean()
         .exec((err, result) => {
@@ -98,7 +99,7 @@ let getSingleProject = (req, res) => {
 let editProject = (req, res) => {
 
     let options = req.body;
-    projectModel.update({ 'projectId': req.params.projectId }, options).exec((err, result) => {
+    projectModel.findOneAndUpdate({ 'projectId': req.params.projectId }, options, { new: true }).exec((err, result) => {
         if (err) {
             console.log(err)
             logger.error(err.message, 'project Controller:editproject', 10)

@@ -62,6 +62,11 @@ export class AppService {
     return response
   }
 
+  searchUsers(userId,searchQuery): Observable<any> {
+    let response = this._http.get(`${this.baseUrl}/users/search/${userId}/${searchQuery}?authToken=${this.authToken}`)
+    return response
+  }
+
   recoverPassword(data): Observable<any> {
     let response = this._http.put(`${this.baseUrl}/users/forgotPassword`, data)
     return response
@@ -69,6 +74,22 @@ export class AppService {
 
   resetPassword(data): Observable<any> {
     let response = this._http.put(`${this.baseUrl}/users/resetPassword`, data)
+    return response
+  }
+
+  createProject(data): Observable<any> {
+    let resposne = this._http.post(`${this.baseUrl}/projects/create?authToken=${this.authToken}`, data)
+    return resposne
+  }
+
+  getProject(id) :Observable<any> {
+    let response = this._http.get(`${this.baseUrl}/projects/${id}/details?authToken=${this.authToken}`)
+    return response
+  }
+
+  getAllProjects(userId): Observable<any> {
+    this.authToken = Cookie.get('authtoken');
+    let response = this._http.get(`${this.baseUrl}/projects/all/${userId}?authToken=${this.authToken}`)
     return response
   }
 
@@ -90,6 +111,11 @@ export class AppService {
 
   editIssue(issueId, data): Observable<any> {
     let response = this._http.put(`${this.baseUrl}/issues/${issueId}/edit?authToken=${this.authToken}`, data)
+    return response
+  }
+
+  editProject(projectId, data): Observable<any> {
+    let response = this._http.put(`${this.baseUrl}/projects/${projectId}/edit?authToken=${this.authToken}`, data)
     return response
   }
 
