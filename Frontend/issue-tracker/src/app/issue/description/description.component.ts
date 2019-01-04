@@ -25,6 +25,7 @@ export class DescriptionComponent implements OnInit {
   addDescription: Boolean = false;
   addAttachment: Boolean = false;
   addAssignee: Boolean = false;
+  viewWatchers: Boolean = false;
   description: String;
   comment: String;
   config: AngularEditorConfig = {
@@ -299,6 +300,15 @@ export class DescriptionComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  toggleWatching(isWatching) {
+    if (isWatching) {
+      this.issue.watchers.includes(this.userDetails.userId) ? "" : this.issue.watchers.push(this.userDetails.userId)
+    } else {
+      this.issue.watchers.includes(this.userDetails.userId) ? this.issue.watchers.splice(this.issue.watchers.indexOf(this.userDetails.userId), 1) : ""
+    }
+    this.editIssue({watchers: this.issue.watchers})
   }
 
 }

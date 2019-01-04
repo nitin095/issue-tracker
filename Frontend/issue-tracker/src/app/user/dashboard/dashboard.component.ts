@@ -113,6 +113,8 @@ export class DashboardComponent implements OnInit {
           this.issues = this.allIssues;
           this.makeActive('assigned')
         } else {
+          this.allIssues = null;
+          this.issues = null;
           console.log(response.message)
         }
       },
@@ -131,7 +133,7 @@ export class DashboardComponent implements OnInit {
     switch (category) {
       case 'assigned':
         if (this.allIssues) {
-          this.issues = this.allIssues.filter(issue => issue.assignee.includes(this.userDetails.userId));
+          this.issues = this.allIssues.filter(issue => issue.assignee === this.userDetails.userId);
           this.getIssuesStatusCount()
         }
         if (this.issues && this.issues.length < 1) this.issues = null
@@ -154,7 +156,7 @@ export class DashboardComponent implements OnInit {
   }//end makeActive
 
   getIssuesStatusCount() {
-    for(let prop in this.issuesStatusCount){
+    for (let prop in this.issuesStatusCount) {
       this.issuesStatusCount[prop] = 0
     }
     for (let issue of this.issues) {

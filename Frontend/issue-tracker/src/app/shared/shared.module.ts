@@ -31,7 +31,8 @@ import {
   MatTabsModule,
   MatTableModule,
   MatPaginatorModule,
-  MatSortModule
+  MatSortModule,
+  MatSlideToggleModule
 } from '@angular/material';
 
 @NgModule({
@@ -69,6 +70,7 @@ import {
     MatNativeDateModule,
     MatDialogModule,
     MatTabsModule,
+    MatSlideToggleModule,
     UserNamePipe,
     SanitizedHTMLPipe,
     FileUploadModule

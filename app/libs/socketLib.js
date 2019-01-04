@@ -52,14 +52,10 @@ let setServer = (server) => {
 
         eventEmitter.on('notification', (data) => {
             console.log('emitting notification')
-            for (let id of data.receiverId) {
+            for (let id of data.receivers) {
                 socket.emit(id, data);
             }
-        })//end eventEmitter on alert
-
-        eventEmitter.on('message', (data) => {
-            socket.emit(message.receiverId, data)
-        })
+        })//end eventEmitter on notification
 
     });//end myTo
 
@@ -70,13 +66,8 @@ let sendNotification = (notification) => {
     eventEmitter.emit('notification', notification)
 }
 
-// function to send message to another user
-let sendMessage = (message) => {
-    eventEmitter.email('message',message)
-}
 
 module.exports = {
     setServer: setServer,
     sendNotification: sendNotification,
-    sendMessage: sendMessage
 }

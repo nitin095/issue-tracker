@@ -8,6 +8,7 @@ const validateInput = require('../libs/paramsValidationLib');
 const check = require('../libs/checkLib');
 const token = require('../libs/tokenLib');
 const mailer = require('../libs/mailer')
+const socketLib = require('./../libs/socketLib');
 
 // Models 
 const issueModel = mongoose.model('Issue')
@@ -145,7 +146,7 @@ let getAllIssues = (req, res) => {
 
 // Get all Project issues
 let getProjectIssues = (req, res) => {
-    let filter = req.query.fields&&req.query.fields !== 'undefined' ? req.query.fields.replace(new RegExp(";", 'g'), " ") : " ";
+    let filter = req.query.fields && req.query.fields !== 'undefined' ? req.query.fields.replace(new RegExp(";", 'g'), " ") : " ";
     issueModel.find({ projectId: req.params.projectId })
         .select(`-_id ${filter}`)
         .lean()
@@ -208,7 +209,17 @@ let editIssue = (req, res) => {
             res.send(apiResponse)
         } else {
             let apiResponse = response.generate(false, 'issue details edited', 200, result)
-            if (res) res.send(apiResponse)
+            res.send(apiResponse)
+
+            //sending notification to all watchers, assignee and reporter
+            let notification = {
+                event: 'Issue edited',
+                receivers: [...result.watchers + result.assignee + result.reporter],
+                editor: req.user.userId,
+                data: req.body,
+                time: Date.now()
+            }
+            socketLib.sendNotification(notification)
         }
     });
 
@@ -348,6 +359,7 @@ let searchIssues = (req, res) => {
         })
 }
 
+
 let addAttachment = (req, res) => {
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('No files were uploaded.');
@@ -364,6 +376,7 @@ let addAttachment = (req, res) => {
         });
     }
 }// end addAttachment 
+
 
 module.exports = {
 

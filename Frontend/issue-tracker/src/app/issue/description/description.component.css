@@ -184,3 +184,70 @@ mat-chip-list input::placeholder {
 .assignee-select-div mat-icon:hover {
     background-color: rgb(158, 158, 158)
 }
+
+.watchers-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-items: flex-end;
+    background-color:whitesmoke;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+    transition: all 0.3s ease
+}
+
+.watchers-btn:hover {
+    background-color: rgb(230, 230, 230)
+}
+
+.watchers-btn span {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: grey
+}
+
+.watchers-btn mat-icon {
+    color: grey;
+}
+
+.watchers-container {
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    width: 300%;
+    background: #fff;
+    border-radius: 10px;
+    z-index: 2;
+    cursor: default;
+    -webkit-box-shadow: -1px 3px 19px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 3px 19px -5px rgba(0,0,0,0.75);
+    box-shadow: -1px 3px 19px -5px rgba(0,0,0,0.75);
+}
+
+.watchers-container mat-icon {
+    font-size: 1rem;
+    position: absolute;
+    top: -1rem;
+    right: 1rem;
+    cursor: pointer;
+    background: lightgrey;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease
+}
+
+.watchers-container mat-icon:hover {
+    background-color: rgb(158, 158, 158)
+}
+
+
+.watchers-container span[matListAvatar] {
+    background: royalblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    transform: scale(0.8)
+}
