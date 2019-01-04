@@ -3,6 +3,8 @@ import { AppService } from './../app.service';
 import { MatSnackBar, MatRipple } from '@angular/material';
 import { ActivatedRoute, Router } from "@angular/router";
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { FileUploadValidators, FileUploadControl } from '@iplab/ngx-file-upload';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-project',
@@ -21,6 +23,7 @@ export class ProjectComponent implements OnInit {
   projectTeam: Array<String> = [];
   addDescription: Boolean = false;
   addProjectMember: Boolean = false;
+  addAttachment: Boolean = false;
   description: String;
   config: AngularEditorConfig = {
     editable: true,
@@ -30,6 +33,9 @@ export class ProjectComponent implements OnInit {
     placeholder: 'Enter text here...',
     translate: 'no'
   }
+  uploadedFiles: Array<File> = [];
+
+  public fileUploadControl = new FileUploadControl(FileUploadValidators.fileSize(5000000));
 
   constructor(private _route: ActivatedRoute, private router: Router, private appService: AppService, public snackBar: MatSnackBar) { }
 
@@ -42,6 +48,7 @@ export class ProjectComponent implements OnInit {
 
   createProject(title) {
     this.loading = true;
+    this.projectTeam.push(this.userDetails.userId);
     let newProject = {
       title: title,
       key: title.split(' ').map(x => x.split('-')).flat().map(x => x[0]).join("").toUpperCase(),
@@ -95,6 +102,40 @@ export class ProjectComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  uploadAttachment() {
+    this.loading = true;
+    this.fileUploadControl.disable();
+    this.appService.addIssueAttachment(this.project.projectId,this.uploadedFiles).subscribe(
+      event => {
+        if(event.type === HttpEventType.UploadProgress){
+          console.log('Upload Progress: '+ Math.round(event.loaded/event.total * 100)+'%')
+        } else if (event.type === HttpEventType.Response){
+          this.loading = false;
+          if (event.status === 200) {
+            this.addAttachment = false;
+            console.log(event.data)
+          } else {
+            this.fileUploadControl.enable();
+            this.snackBar.open(event.message, 'Close', { duration: 4000, });
+            console.log(event.message)
+          }
+        }
+      },
+      error => {
+        this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
+        this.loading = false;
+        this.fileUploadControl.enable();
+        console.log("some error occured");
+        console.log(error)
+      }
+    )
+
+  }//end uploadAttachment
+
+  clearAttachments(): void {
+    this.fileUploadControl.clear();
   }
 
   searchUsers(searchQuery) {

@@ -21,6 +21,7 @@ export class MainNavComponent {
 
   userDetails = this.appService.getUserInfoFromLocalstorage();
   url: string = "";
+  userName =  Cookie.get('receiverName');
 
   constructor(private breakpointObserver: BreakpointObserver, private router: Router, private appService: AppService, public snackBar: MatSnackBar) {
     router.events.subscribe((val) => {

@@ -145,9 +145,9 @@ let getAllIssues = (req, res) => {
 
 // Get all Project issues
 let getProjectIssues = (req, res) => {
-    let filter = req.query.fields ? req.query.fields.replace(new RegExp(";", 'g'), " ") : '';
+    let filter = req.query.fields&&req.query.fields !== 'undefined' ? req.query.fields.replace(new RegExp(";", 'g'), " ") : " ";
     issueModel.find({ projectId: req.params.projectId })
-        .select(`-__v ${filter}`)
+        .select(`-_id ${filter}`)
         .lean()
         .exec((err, result) => {
             if (err) {
@@ -348,6 +348,23 @@ let searchIssues = (req, res) => {
         })
 }
 
+let addAttachment = (req, res) => {
+    if (Object.keys(req.files).length == 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+    console.log(req.files)
+    let files = Array.isArray(req.files.file) ? req.files.file : Array(req.files.file)
+    for (let file of files) {
+        console.log('FILE:  ', file.name)
+        file.mv(`/uploads/attachments/issues/${req.params.issueId}/${file.name}`, (err) => {
+            if (err)
+                return res.status(500).send(err);
+            let apiResponse = response.generate(false, 'File uploaded!', 200, null)
+            res.send(apiResponse);
+        });
+    }
+}// end addAttachment 
+
 module.exports = {
 
     createIssue: createIssue,
@@ -359,6 +376,7 @@ module.exports = {
     editComment: editComment,
     deleteIssue: deleteIssue,
     deleteComment: deleteComment,
-    searchIssues: searchIssues
+    searchIssues: searchIssues,
+    addAttachment: addAttachment
 
 }// end exports

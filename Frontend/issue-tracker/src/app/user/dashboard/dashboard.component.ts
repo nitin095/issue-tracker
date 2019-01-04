@@ -20,6 +20,8 @@ export class DashboardComponent implements OnInit {
   allIssues: any;
   allReporters: Set<String>;
   issues: any;
+  issuesStatusCount: Object = { inProgress: 0, done: 0, toDo: 0, backlog: 0 };
+  activeCategory: Object = { assigned: true, reported: false, watching: false }
 
   constructor(
     private _route: ActivatedRoute,
@@ -30,7 +32,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getProjects()
-    this.getIssues()
   }
 
   getProjects() {
@@ -41,7 +42,10 @@ export class DashboardComponent implements OnInit {
         if (response.status === 200) {
           console.log(response.data)
           this.allprojects = response.data;
+          this.activeProject = this.allprojects[0].projectId
+          this.changeProject()
         } else {
+          this.getIssues()
           console.log(response.message)
         }
       },
@@ -53,7 +57,7 @@ export class DashboardComponent implements OnInit {
       }
     )
   }
-  
+
   getIssues() {
     this.loading = true
     this.appService.getIssues(this.userDetails.userId).subscribe(
@@ -98,7 +102,86 @@ export class DashboardComponent implements OnInit {
   }
 
   changeProject() {
-    
+    console.log('changing project:')
+    this.loading = true;
+    this.appService.getProjectIssues(this.activeProject).subscribe(
+      response => {
+        this.loading = false
+        if (response.status === 200) {
+          console.log(response.data)
+          this.allIssues = response.data;
+          this.issues = this.allIssues;
+          this.makeActive('assigned')
+        } else {
+          console.log(response.message)
+        }
+      },
+      error => {
+        this.loading = false
+        this.allprojects = null
+        console.log("some error occured");
+        console.log(error)
+      }
+    )
+  }
+
+  makeActive(category) {
+    this.activeCategory = Object.entries(this.activeCategory).map(x => false);
+    this.activeCategory[category] = true;
+    switch (category) {
+      case 'assigned':
+        if (this.allIssues) {
+          this.issues = this.allIssues.filter(issue => issue.assignee.includes(this.userDetails.userId));
+          this.getIssuesStatusCount()
+        }
+        if (this.issues && this.issues.length < 1) this.issues = null
+        break;
+      case 'reported':
+        if (this.allIssues) {
+          this.issues = this.allIssues.filter(issue => issue.reporter == this.userDetails.userId);
+          this.getIssuesStatusCount()
+        }
+        if (this.issues && this.issues.length < 1) this.issues = null
+        break;
+      case 'watching':
+        if (this.allIssues) {
+          this.issues = this.allIssues.filter(issue => issue.watchers.includes(this.userDetails.userId));
+          this.getIssuesStatusCount()
+        }
+        if (this.issues && this.issues.length < 1) this.issues = null
+        break;
+    }
+  }//end makeActive
+
+  getIssuesStatusCount() {
+    for(let prop in this.issuesStatusCount){
+      this.issuesStatusCount[prop] = 0
+    }
+    for (let issue of this.issues) {
+      switch (issue.status) {
+        case 'inProgress':
+          this.issuesStatusCount[issue.status]++;
+          break;
+        case 'toDo':
+          this.issuesStatusCount[issue.status]++;
+          break;
+        case 'done':
+          this.issuesStatusCount[issue.status]++;
+          break;
+        case 'backlog':
+          this.issuesStatusCount[issue.status]++;
+          break;
+      }
+    }
+  }
+
+  reportNewIssue() {
+    if (this.activeProject) {
+      this.router.navigate(['/issue/browse', 'new'], { queryParams: { project: this.activeProject } });
+    } else {
+      this.snackBar.open('Select a project first.', 'close', { duration: 4000 })
+    }
+
   }
 
 }

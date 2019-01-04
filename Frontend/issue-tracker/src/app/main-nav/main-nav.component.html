@@ -22,7 +22,7 @@
       <button *ngIf="!(isHandset$ | async)&&url.includes('issue')||url.includes('project')||url.includes('profile')" mat-button [routerLink]="['dashboard']">Dashboard</button>
       <button *ngIf="!(isHandset$ | async)&&url.includes('home')" mat-button [routerLink]="['login']">Login</button>
       <button *ngIf="!(isHandset$ | async)&&url.includes('login')" mat-button [routerLink]="['home']">Signup</button>
-      <button *ngIf="!(isHandset$ | async)&&!url.includes('home')&&!url.includes('login')" mat-button [matMenuTriggerFor]="menu">{{userDetails.firstName}} {{userDetails.lastName}}</button>
+      <button *ngIf="!(isHandset$ | async)&&!url.includes('home')&&!url.includes('login')" mat-button [matMenuTriggerFor]="menu">{{userName}}</button>
       <mat-menu #menu="matMenu">
           <button mat-menu-item [routerLink]="['profile']">Profile</button>
         <button mat-menu-item (click)="logout()">Logout</button>

@@ -62,7 +62,7 @@ export class AppService {
     return response
   }
 
-  searchUsers(userId,searchQuery): Observable<any> {
+  searchUsers(userId, searchQuery): Observable<any> {
     let response = this._http.get(`${this.baseUrl}/users/search/${userId}/${searchQuery}?authToken=${this.authToken}`)
     return response
   }
@@ -82,8 +82,8 @@ export class AppService {
     return resposne
   }
 
-  getProject(id) :Observable<any> {
-    let response = this._http.get(`${this.baseUrl}/projects/${id}/details?authToken=${this.authToken}`)
+  getProject(id,fields?): Observable<any> {
+    let response = this._http.get(`${this.baseUrl}/projects/${id}/details?authToken=${this.authToken}&fields=${fields}`)
     return response
   }
 
@@ -104,6 +104,12 @@ export class AppService {
     return response
   }
 
+  getProjectIssues(projectId): Observable<any> {
+    this.authToken = Cookie.get('authtoken');
+    let response = this._http.get(`${this.baseUrl}/issues/project/${projectId}?authToken=${this.authToken}`)
+    return response
+  }
+
   getSingleIssue(issueId): Observable<any> {
     let response = this._http.get(`${this.baseUrl}/issues/${issueId}/details?authToken=${this.authToken}`)
     return response
@@ -112,6 +118,30 @@ export class AppService {
   editIssue(issueId, data): Observable<any> {
     let response = this._http.put(`${this.baseUrl}/issues/${issueId}/edit?authToken=${this.authToken}`, data)
     return response
+  }
+
+  addIssueAttachment(issueId,files): Observable<any> {
+    const fd = new FormData();
+    for (let file of files) {
+      fd.append('file', file, file.name);
+    }
+    let resposne = this._http.post(`${this.baseUrl}/issues/${issueId}/attachment?authToken=${this.authToken}`, fd, {
+      reportProgress: true,
+      observe: 'events'
+    })
+    return resposne
+  }
+
+  addProjectAttachment(projectId,files): Observable<any> {
+    const fd = new FormData();
+    for (let file of files) {
+      fd.append('file', file, file.name);
+    }
+    let resposne = this._http.post(`${this.baseUrl}/projects/${projectId}/attachment?authToken=${this.authToken}`, fd, {
+      reportProgress: true,
+      observe: 'events'
+    })
+    return resposne
   }
 
   editProject(projectId, data): Observable<any> {

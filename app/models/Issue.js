@@ -78,7 +78,10 @@ let issueSchema = new Schema({
         type: Date,
         default: null
     },
-    assignees: [],
+    assignee: {
+        type: String,
+        default: null
+    },
     watchers: [],
     labels: [],
     linkedIssues: [linkedIssueSchema],

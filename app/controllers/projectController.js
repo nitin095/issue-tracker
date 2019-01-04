@@ -48,7 +48,7 @@ let createProject = (req, res) => {
 // Get all project details 
 let getAllProjects = (req, res) => {
 
-    projectModel.find({ "createdBy": req.params.userId })
+    projectModel.find({ "team": req.params.userId })
         .select(' -__v -_id')
         .lean()
         .exec((err, result) => {
@@ -72,9 +72,9 @@ let getAllProjects = (req, res) => {
 
 // Get single project details 
 let getSingleProject = (req, res) => {
-
+    let filter = req.query.fields&&req.query.fields !== 'undefined' ? req.query.fields.replace(new RegExp(";", 'g'), " ") : " ";
     projectModel.findOne({ 'projectId': req.params.projectId })
-        .select('-__v -_id')
+        .select(`-_id ${filter}`)
         .lean()
         .exec((err, result) => {
             if (err) {
@@ -91,7 +91,6 @@ let getSingleProject = (req, res) => {
                 res.send(apiResponse)
             }
         })
-
 }// end get single project
 
 
@@ -140,12 +139,31 @@ let deleteProject = (req, res) => {
 }// end delete project
 
 
+let addAttachment = (req, res) => {
+    if (Object.keys(req.files).length == 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+    console.log(req.files)
+    let files = Array.isArray(req.files.file) ? req.files.file : Array(req.files.file)
+    for (let file of files) {
+        console.log('FILE:  ', file.name)
+        file.mv(`/uploads/attachments/projects/${req.params.projectId}/${file.name}`, (err) => {
+            if (err)
+                return res.status(500).send(err);
+            let apiResponse = response.generate(false, 'File uploaded!', 200, null)
+            res.send(apiResponse);
+        });
+    }
+}// end addAttachment 
+
+
 module.exports = {
 
     createProject: createProject,
     getAllProjects: getAllProjects,
     getSingleProject: getSingleProject,
     editProject: editProject,
-    deleteProject: deleteProject
+    deleteProject: deleteProject,
+    addAttachment: addAttachment
 
 }// end exports

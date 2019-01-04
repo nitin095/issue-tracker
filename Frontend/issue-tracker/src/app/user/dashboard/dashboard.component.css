@@ -20,6 +20,14 @@ mat-progress-bar {
     z-index: 2;
 }
 
+.active-side-nav, .active-side-nav:hover {
+    background: rgb(192, 218, 252);
+}
+
+.active-side-nav mat-icon {
+    color: royalblue
+}
+
 data-table {
     z-index: 1
 }
@@ -141,4 +149,19 @@ mat-nav-list a {
     font-size: x-small;
     font-weight: 600;
     letter-spacing: 0.5px
+}
+
+.no-issues * {
+    cursor: default
+}
+
+.no-issues mat-icon {
+    font-size: 2rem;
+    background: royalblue;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }

@@ -60,7 +60,7 @@
 
     <!-- project options -->
     <div class="col-12 my-2 project-options">
-      <mat-icon class="mr-4" matTooltip="Add attachment" matRipple>attachment</mat-icon>
+      <mat-icon class="mr-4" matTooltip="Add attachment" matRipple (click)="addAttachment=true">attachment</mat-icon>
       <mat-icon class="mr-4" *ngIf="!project.isStarred" matTooltip="Add star" matRipple (click)="editproject({isStarred:true})">star_border</mat-icon>
       <mat-icon class="mr-4" *ngIf="project.isStarred" matTooltip="Remove star" style="color:goldenrod" matRipple
         (click)="editproject({isStarred:false})">star</mat-icon>
@@ -71,6 +71,15 @@
           <span>Delete project</span>
         </button>
       </mat-menu>
+    </div>
+
+    <!-- file upload -->
+    <div class="col-12 mt-2 mb-4" *ngIf="addAttachment">
+      <file-upload class="mb-2" [(ngModel)]="uploadedFiles" name="files" [control]="fileUploadControl"
+        [style.background]="fileUploadControl.invalid? 'lavenderblush':''"></file-upload>
+      <button class="mx-2" mat-flat-button color="primary" (click)="uploadAttachment()">Upload</button>
+      <button class="mx-2" mat-stroked-button color="primary" *ngIf="uploadedFiles.length>0" (click)="clearAttachments()">Reset</button>
+      <button class="mx-2" mat-stroked-button color="primary" (click)="addAttachment=false;clearAttachments()">Cancel</button>
     </div>
 
     <!-- project description -->

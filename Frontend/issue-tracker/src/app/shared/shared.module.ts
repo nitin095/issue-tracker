@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DataTableComponent } from './data-table/data-table.component';
 import { UserNamePipe } from './user-name.pipe';
 import { SanitizedHTMLPipe } from './sanitized-html.pipe';
+import { FileUploadModule } from '@iplab/ngx-file-upload';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -69,7 +70,8 @@ import {
     MatDialogModule,
     MatTabsModule,
     UserNamePipe,
-    SanitizedHTMLPipe
+    SanitizedHTMLPipe,
+    FileUploadModule
   ]
 })
 export class SharedModule { }

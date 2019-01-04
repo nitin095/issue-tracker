@@ -12,6 +12,7 @@ const routeLoggerMiddleware = require('./app/middlewares/routeLogger.js');
 const globalErrorMiddleware = require('./app/middlewares/appErrorHandler');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const fileUpload = require('express-fileupload');
 
 
 // Application level middlewares
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(routeLoggerMiddleware.logIp);
 app.use(globalErrorMiddleware.globalErrorHandler);
 app.use(express.static(path.join(__dirname, 'client')));
+app.use(fileUpload());
 
 
 // Paths

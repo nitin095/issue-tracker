@@ -197,5 +197,7 @@ module.exports.setRouter = (app) => {
 	   }
 	 */
 
+	app.post(`${baseUrl}/:projectId/attachment`, auth.isAuthorized, projectController.addAttachment);
+
 }
 // end module.exports.setRouter

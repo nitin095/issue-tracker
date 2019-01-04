@@ -3,8 +3,10 @@ import { AppService } from './../../app.service'
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from "@angular/router";
 import { AngularEditorConfig } from '@kolkov/angular-editor';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material';
+import { HttpEventType } from '@angular/common/http';
+import { FileUploadValidators, FileUploadControl } from '@iplab/ngx-file-upload';
 
 @Component({
   selector: 'app-description',
@@ -17,8 +19,12 @@ export class DescriptionComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   loading: Boolean = false;
   newIssue: Boolean = true;
+  projectId: String;
+  projectTeam = [];
   issue: any;
   addDescription: Boolean = false;
+  addAttachment: Boolean = false;
+  addAssignee: Boolean = false;
   description: String;
   comment: String;
   config: AngularEditorConfig = {
@@ -29,6 +35,9 @@ export class DescriptionComponent implements OnInit {
     placeholder: 'Enter text here...',
     translate: 'no'
   }
+  uploadedFiles: Array<File> = [];
+
+  public fileUploadControl = new FileUploadControl(FileUploadValidators.fileSize(5000000));
 
   constructor(private _route: ActivatedRoute, private router: Router, private appService: AppService, public snackBar: MatSnackBar) { }
 
@@ -36,6 +45,9 @@ export class DescriptionComponent implements OnInit {
     this._route.params.subscribe(params => {
       let issueId = this._route.snapshot.paramMap.get('issueId');
       if (issueId !== 'new') this.getIssue(issueId)
+      else {
+        this.projectId = this._route.snapshot.queryParamMap.get('project');
+      }
     });
   }
 
@@ -47,6 +59,7 @@ export class DescriptionComponent implements OnInit {
         this.loading = false;
         if (response.status === 200) {
           this.issue = response.data;
+          this.getProjectTeam(this.issue.projectId)
           console.log(response.data);
         } else {
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
@@ -65,7 +78,7 @@ export class DescriptionComponent implements OnInit {
   createIssue(title) {
     this.loading = true;
     let data = {
-      projectId: 'req.body.projectId',
+      projectId: this.projectId,
       reporter: this.userDetails.userId,
       title: title,
     }
@@ -90,6 +103,40 @@ export class DescriptionComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  uploadAttachment() {
+    this.loading = true;
+    this.fileUploadControl.disable();
+    this.appService.addIssueAttachment(this.issue.issueId, this.uploadedFiles).subscribe(
+      event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          console.log('Upload Progress: ' + Math.round(event.loaded / event.total * 100) + '%')
+        } else if (event.type === HttpEventType.Response) {
+          this.loading = false;
+          if (event.status === 200) {
+            this.addAttachment = false;
+            console.log(event.data)
+          } else {
+            this.fileUploadControl.enable();
+            this.snackBar.open(event.message, 'Close', { duration: 4000, });
+            console.log(event.message)
+          }
+        }
+      },
+      error => {
+        this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
+        this.loading = false;
+        this.fileUploadControl.enable();
+        console.log("some error occured");
+        console.log(error)
+      }
+    )
+
+  }//end uploadAttachment
+
+  clearAttachments(): void {
+    this.fileUploadControl.clear();
   }
 
   createComment() {
@@ -120,7 +167,7 @@ export class DescriptionComponent implements OnInit {
   }
 
   editIssue(data) {
-    console.log('DATA: ',data)
+    console.log('DATA: ', data)
     this.loading = true;
     this.appService.editIssue(this.issue.issueId, data).subscribe(
       response => {
@@ -170,7 +217,7 @@ export class DescriptionComponent implements OnInit {
     // Add label
     if ((value || '').trim()) {
       this.issue.labels.push(value.trim());
-      this.editIssue({labels:this.issue.labels})
+      this.editIssue({ labels: this.issue.labels })
     }
 
     // Reset the input value
@@ -184,7 +231,7 @@ export class DescriptionComponent implements OnInit {
 
     if (index >= 0) {
       this.issue.labels.splice(index, 1);
-      this.editIssue({labels:this.issue.labels})
+      this.editIssue({ labels: this.issue.labels })
     }
   }
 
@@ -218,6 +265,28 @@ export class DescriptionComponent implements OnInit {
         if (response.status === 200) {
           this.router.navigate(['dashboard']);
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
+        } else {
+          this.snackBar.open(response.message, 'Close', { duration: 4000, });
+          console.log(response.message)
+        }
+      },
+      error => {
+        this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
+        this.loading = false;
+        console.log("some error occured");
+        console.log(error)
+      }
+    )
+  }
+
+  getProjectTeam(projectId) {
+    this.loading = true;
+    this.appService.getProject(projectId, 'team').subscribe(
+      response => {
+        this.loading = false;
+        if (response.status === 200) {
+          this.projectTeam = response.data.team;
+          console.log(response.data.team)
         } else {
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
           console.log(response.message)
