@@ -404,10 +404,10 @@ let getAttachments = (req, res) => {
         let apiResponse = response.generate(true, 'parameters issueId missing', 403, null)
         res.send(apiResponse);
     } else {
-        let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}`;
+        let folderPath = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}`;
         let files = [];
-        fs.readdirSync(path).map(fileName => {
-            files.push(path.join(path, fileName))
+        fs.readdirSync(folderPath).map(fileName => {
+            files.push(path.join(folderPath, fileName))
         })
         if (files.length > 0) {
             let apiResponse = response.generate(false, 'Files found!', 200, files)
