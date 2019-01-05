@@ -152,6 +152,11 @@ export class AppService {
     return response
   }
 
+  downloadIssueAttachment(issueId,file): Observable<any> {
+    let response = this._http.get(`${this.baseUrl}/issues/${issueId}/attachment/download/${file}?authToken=${this.authToken}`)
+    return response
+  }
+
   editProject(projectId, data): Observable<any> {
     let response = this._http.put(`${this.baseUrl}/projects/${projectId}/edit?authToken=${this.authToken}`, data)
     return response

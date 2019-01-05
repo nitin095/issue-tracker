@@ -407,7 +407,7 @@ let getAttachments = (req, res) => {
         let folderPath = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}`;
         let files = [];
         fs.readdirSync(folderPath).map(fileName => {
-            files.push(path.join(folderPath, fileName))
+            files.push(fileName)
         })
         if (files.length > 0) {
             let apiResponse = response.generate(false, 'Files found!', 200, files)
@@ -418,6 +418,11 @@ let getAttachments = (req, res) => {
         }
     }
 }// end  getAttachments
+
+let downloadAttachment = (req, res) => {
+    let path = __dirname + `/../../uploads/attachments/issues/${req.params.file}`;
+    res.download(path);
+}
 
 module.exports = {
 
@@ -432,6 +437,7 @@ module.exports = {
     deleteComment: deleteComment,
     searchIssues: searchIssues,
     addAttachment: addAttachment,
-    getAttachments: getAttachments
+    getAttachments: getAttachments,
+    downloadAttachment: downloadAttachment
 
 }// end exports

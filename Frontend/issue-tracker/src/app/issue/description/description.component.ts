@@ -30,6 +30,7 @@ export class DescriptionComponent implements OnInit {
   viewWatchers: Boolean = false;
   description: String;
   comment: String;
+  attachments = [];
   permissions = {
     addFlag: ['reporter', 'assignee', 'teamMember'],
     changeAssignee: ['reporter', 'assignee', 'teamMember'],
@@ -171,6 +172,7 @@ export class DescriptionComponent implements OnInit {
       response => {
         this.loading = false;
         if (response.status === 200) {
+          this.attachments = response.data;
           console.log(response.data)
         } else {
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
@@ -185,6 +187,10 @@ export class DescriptionComponent implements OnInit {
       }
     )
   }// end getAttachments
+
+  downloadAttachment(file) {
+    this.appService.downloadIssueAttachment(this.issue.issueId,file)
+  }
 
   createComment() {
     this.loading = true;
