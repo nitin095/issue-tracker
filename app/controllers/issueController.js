@@ -372,7 +372,7 @@ let searchIssues = (req, res) => {
 }
 
 
-let addAttachment = async (req, res) => {
+let addAttachment = (req, res) => {
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('No files were uploaded.');
     }
@@ -381,8 +381,11 @@ let addAttachment = async (req, res) => {
     for (let file of files) {
         console.log('FILE:  ', file.name)
         let path = `/uploads/attachments/issues/${req.params.issueId}`
-        await mkdirp(path);
-        await file.mv(`${path}/${file.name}`, (err) => {
+        mkdirp(path, function (err) {
+            if (err) console.error(err)
+            else console.log('pow!')
+        });
+        file.mv(`${path}/${file.name}`, (err) => {
             if (err)
                 return res.status(500).send(err);
             let apiResponse = response.generate(false, 'File uploaded!', 200, null)
