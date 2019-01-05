@@ -379,7 +379,7 @@ let addAttachment = (req, res) => {
     let files = Array.isArray(req.files.file) ? req.files.file : Array(req.files.file)
     for (let file of files) {
         console.log('FILE:  ', file.name)
-        file.mv(`/uploads/attachments/issues/${req.params.issueId}/${file.name}`, (err) => {
+        file.mv(__dirname + `/uploads/attachments/issues/${req.params.issueId}/${file.name}`, (err) => {
             if (err)
                 return res.status(500).send(err);
             let apiResponse = response.generate(false, 'File uploaded!', 200, null)
