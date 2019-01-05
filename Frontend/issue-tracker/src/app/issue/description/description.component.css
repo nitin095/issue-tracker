@@ -76,9 +76,14 @@ mat-progress-bar {
     transition: all 0.3s ease
 }
 
-.attachment:hover {
-    background-color: whitesmoke;
-    border-radius: 10px;
+.attachment span {
+    font-size: x-small;
+    margin-left: 1rem;
+    color: grey
+}
+
+.attachment span:hover {
+    color: red
 }
 
 mat-tab-group {

@@ -152,8 +152,13 @@ export class AppService {
     return response
   }
 
-  downloadIssueAttachment(issueId,file): Observable<any> {
-    let response = this._http.get(`${this.baseUrl}/issues/${issueId}/attachment/download/${file}?authToken=${this.authToken}`)
+  getIssueAttachmentDownloadLink(issueId,file): String {
+    let link = `${this.baseUrl}/issues/${issueId}/attachment/download/${file}?authToken=${this.authToken}`
+    return link
+  }
+
+  deleteIssueAttachment(issueId,file): Observable<any> {
+    let response = this._http.post(`${this.baseUrl}/issues/${issueId}/attachment/delete/${file}?authToken=${this.authToken}`,'')
     return response
   }
 

@@ -420,5 +420,7 @@ module.exports.setRouter = (app) => {
 
 	app.get(`${baseUrl}/:issueId/attachment/download/:file`, auth.isAuthorized, issueController.downloadAttachment);
 
+	app.post(`${baseUrl}/:issueId/attachment/delete/:file`, auth.isAuthorized, issueController.deleteAttachment);
+
 }
 // end module.exports.setRouter

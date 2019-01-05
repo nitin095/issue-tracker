@@ -420,8 +420,31 @@ let getAttachments = (req, res) => {
 }// end  getAttachments
 
 let downloadAttachment = (req, res) => {
-    let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}/${req.params.file}`;
-    res.download(path);
+    if (check.isEmpty(req.params.issueId && req.params.file)) {
+        let apiResponse = response.generate(true, 'parameters issueId missing', 403, null)
+        res.send(apiResponse);
+    } else {
+        let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}/${req.params.file}`;
+        res.download(path);
+    }
+}
+
+let deleteAttachment = (req, res) => {
+    if (check.isEmpty(req.params.issueId && req.params.file)) {
+        let apiResponse = response.generate(true, 'parameters issueId missing', 403, null)
+        res.send(apiResponse);
+    } else {
+        let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}/${req.params.file}`;
+        fs.unlink(path, (err) => {
+            if (err) {
+                let apiResponse = response.generate(false, 'No file found!', 404, null)
+                res.send(apiResponse);
+            } else {
+                let apiResponse = response.generate(false, 'File deleted!', 200, null)
+                res.send(apiResponse);
+            }
+        })
+    }
 }
 
 module.exports = {
@@ -438,6 +461,7 @@ module.exports = {
     searchIssues: searchIssues,
     addAttachment: addAttachment,
     getAttachments: getAttachments,
-    downloadAttachment: downloadAttachment
+    downloadAttachment: downloadAttachment,
+    deleteAttachment: deleteAttachment
 
 }// end exports

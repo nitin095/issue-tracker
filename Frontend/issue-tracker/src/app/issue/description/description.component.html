@@ -76,7 +76,10 @@
         <div class="col-12 my-4" *ngIf="attachments">
           <div class="heading-3 mb-2">Attachments</div>
           <div class="row" *ngFor="let file of attachments">
-            <small class="col-auto attachment" (click)="downloadAttachment(file)">{{file}}</small>
+            <small class="col-auto attachment">
+              <a href="{{getDownloadLink(file)}}">{{file}}</a>
+              <span (click)="deleteAttachment(file)">Delete</span>
+            </small>
           </div>
         </div>
 

@@ -188,14 +188,31 @@ export class DescriptionComponent implements OnInit {
     )
   }// end getAttachments
 
-  downloadAttachment(file) {
-    console.log('downloading ',file)
-    this.appService.downloadIssueAttachment(this.issue.issueId,file).subscribe(
+  getDownloadLink(file) {
+    return this.appService.getIssueAttachmentDownloadLink(this.issue.issueId, file)
+  }
+
+  deleteAttachment(file) {
+    this.loading = true;
+    this.appService.deleteIssueAttachment(this.issue.issueId, file).subscribe(
       response => {
-        console.log(response)
+        this.loading = false;
+        if (response.status === 200) {
+          this.attachments.splice(this.attachments.indexOf(file), 1)
+          console.log(response.data)
+        } else {
+          this.snackBar.open(response.message, 'Close', { duration: 4000, });
+          console.log(response.message)
+        }
+      },
+      error => {
+        this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
+        this.loading = false;
+        console.log("some error occured");
+        console.log(error)
       }
     )
-  }
+  }// end deleteAttachment
 
   createComment() {
     this.loading = true;
