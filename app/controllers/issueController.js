@@ -380,17 +380,19 @@ let addAttachment = (req, res) => {
     let files = Array.isArray(req.files.file) ? req.files.file : Array(req.files.file)
     for (let file of files) {
         console.log('FILE:  ', file.name)
-        let path = __dirname +`/../../uploads/attachments/issues/${req.params.issueId}`
+        let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}`
         mkdirp(path, function (err) {
             if (err) console.error(err)
-            else console.log('pow!')
+            else {
+                file.mv(`${path}/${file.name}`, (err) => {
+                    if (err)
+                        return res.status(500).send(err);
+                    let apiResponse = response.generate(false, 'File uploaded!', 200, null)
+                    res.send(apiResponse);
+                });
+            }
         });
-        file.mv(`${path}/${file.name}`, (err) => {
-            if (err)
-                return res.status(500).send(err);
-            let apiResponse = response.generate(false, 'File uploaded!', 200, null)
-            res.send(apiResponse);
-        });
+
     }
 }// end addAttachment 
 
