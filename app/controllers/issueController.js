@@ -380,7 +380,7 @@ let addAttachment = (req, res) => {
     let files = Array.isArray(req.files.file) ? req.files.file : Array(req.files.file)
     for (let file of files) {
         console.log('FILE:  ', file.name)
-        let path = `/uploads/attachments/issues/${req.params.issueId}`
+        let path = __dirname +`/../../uploads/attachments/issues/${req.params.issueId}`
         mkdirp(path, function (err) {
             if (err) console.error(err)
             else console.log('pow!')
