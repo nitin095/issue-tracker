@@ -382,7 +382,7 @@ let addAttachment = async (req, res) => {
         console.log('FILE:  ', file.name)
         let path = `/uploads/attachments/issues/${req.params.issueId}/${file.name}`
         await mkdirp(path);
-        file.mv(path, (err) => {
+        await file.mv(path, (err) => {
             if (err)
                 return res.status(500).send(err);
             let apiResponse = response.generate(false, 'File uploaded!', 200, null)
