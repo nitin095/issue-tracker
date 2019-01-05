@@ -10,6 +10,8 @@ const token = require('../libs/tokenLib');
 const mailer = require('../libs/mailer')
 const socketLib = require('./../libs/socketLib');
 const mkdirp = require('mkdirp');
+const fs = require('fs')
+const path = require('path')
 
 // Models 
 const issueModel = mongoose.model('Issue')
@@ -397,6 +399,26 @@ let addAttachment = (req, res) => {
 }// end addAttachment 
 
 
+let getAttachments = (req, res) => {
+    if (check.isEmpty(req.params.issueId)) {
+        let apiResponse = response.generate(true, 'parameters issueId missing', 403, null)
+        res.send(apiResponse);
+    } else {
+        let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}`;
+        let files = [];
+        fs.readdirSync(path).map(fileName => {
+            files.push(path.join(folderPath, fileName))
+        })
+        if (files.length > 0) {
+            let apiResponse = response.generate(false, 'Files found!', 200, files)
+            res.send(apiResponse);
+        } else {
+            let apiResponse = response.generate(false, 'No file found!', 404, null)
+            res.send(apiResponse);
+        }
+    }
+}// end  getAttachments
+
 module.exports = {
 
     createIssue: createIssue,
@@ -409,6 +431,7 @@ module.exports = {
     deleteIssue: deleteIssue,
     deleteComment: deleteComment,
     searchIssues: searchIssues,
-    addAttachment: addAttachment
+    addAttachment: addAttachment,
+    getAttachments: getAttachments
 
 }// end exports

@@ -69,6 +69,7 @@ export class DescriptionComponent implements OnInit {
         this.loading = false;
         if (response.status === 200) {
           this.issue = response.data;
+          this.getAttachments();
           this.getProjectTeam(this.issue.projectId);
           if (this.issue.reporter === this.userDetails.userId) this.userType = 'reporter'
           else if (this.issue.assignee === this.userDetails.userId) this.userType = 'assignee'
@@ -140,11 +141,12 @@ export class DescriptionComponent implements OnInit {
           this.loading = false;
           if (event.status === 200) {
             this.addAttachment = false;
-            console.log(event.data)
+            console.log(event.body);
+            this.snackBar.open(event.body.message, 'Close', { duration: 4000, });
           } else {
             this.fileUploadControl.enable();
-            this.snackBar.open(event.message, 'Close', { duration: 4000, });
-            console.log(event.message)
+            this.snackBar.open(event.body.message, 'Close', { duration: 4000, });
+            console.log(event.body.message)
           }
         }
       },
@@ -162,6 +164,27 @@ export class DescriptionComponent implements OnInit {
   clearAttachments(): void {
     this.fileUploadControl.clear();
   }
+
+  getAttachments() {
+    this.loading = true;
+    this.appService.getIssueAttachments(this.issue.issueId).subscribe(
+      response => {
+        this.loading = false;
+        if (response.status === 200) {
+          console.log(response.data)
+        } else {
+          this.snackBar.open(response.message, 'Close', { duration: 4000, });
+          console.log(response.message)
+        }
+      },
+      error => {
+        this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
+        this.loading = false;
+        console.log("some error occured");
+        console.log(error)
+      }
+    )
+  }// end getAttachments
 
   createComment() {
     this.loading = true;

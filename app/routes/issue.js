@@ -416,5 +416,7 @@ module.exports.setRouter = (app) => {
 
 	app.post(`${baseUrl}/:issueId/attachment`, auth.isAuthorized, issueController.addAttachment);
 
+	app.get(`${baseUrl}/:issueId/attachment/get`, auth.isAuthorized, issueController.getAttachments);
+
 }
 // end module.exports.setRouter
