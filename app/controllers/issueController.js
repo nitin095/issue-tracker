@@ -9,6 +9,7 @@ const check = require('../libs/checkLib');
 const token = require('../libs/tokenLib');
 const mailer = require('../libs/mailer')
 const socketLib = require('./../libs/socketLib');
+const mkdirp = require('mkdirp');
 
 // Models 
 const issueModel = mongoose.model('Issue')
@@ -371,7 +372,7 @@ let searchIssues = (req, res) => {
 }
 
 
-let addAttachment = (req, res) => {
+let addAttachment = async (req, res) => {
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('No files were uploaded.');
     }
@@ -379,7 +380,9 @@ let addAttachment = (req, res) => {
     let files = Array.isArray(req.files.file) ? req.files.file : Array(req.files.file)
     for (let file of files) {
         console.log('FILE:  ', file.name)
-        file.mv(__dirname + `/uploads/attachments/issues/${req.params.issueId}/${file.name}`, (err) => {
+        let path = `/uploads/attachments/issues/${req.params.issueId}/${file.name}`
+        await mkdirp(path);
+        file.mv(path, (err) => {
             if (err)
                 return res.status(500).send(err);
             let apiResponse = response.generate(false, 'File uploaded!', 200, null)
