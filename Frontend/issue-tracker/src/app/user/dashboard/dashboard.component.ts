@@ -28,8 +28,9 @@ export class DashboardComponent implements OnInit {
   allIssues: any;
   allReporters: Set<String>;
   issues: any;
-  issuesStatusCount: Object = { inProgress: 0, done: 0, toDo: 0, backlog: 0 };
-  activeCategory: Object = { assigned: true, reported: false, watching: false };
+  selectedReporter: String;
+  issuesStatusCount = { inProgress: 0, done: 0, toDo: 0, backlog: 0 };
+  activeCategory = { assigned: true, reported: false, watching: false };
   authToken: any;
   notification: any = {};
 
@@ -143,7 +144,7 @@ export class DashboardComponent implements OnInit {
   }
 
   makeActive(category) {
-    this.activeCategory = Object.entries(this.activeCategory).map(x => false);
+    this.activeCategory = { assigned: false, reported: false, watching: false };
     this.activeCategory[category] = true;
     switch (category) {
       case 'assigned':
