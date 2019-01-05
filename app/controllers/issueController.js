@@ -407,7 +407,7 @@ let getAttachments = (req, res) => {
         let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}`;
         let files = [];
         fs.readdirSync(path).map(fileName => {
-            files.push(path.join(folderPath, fileName))
+            files.push(path.join(path, fileName))
         })
         if (files.length > 0) {
             let apiResponse = response.generate(false, 'Files found!', 200, files)
