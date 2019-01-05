@@ -380,9 +380,9 @@ let addAttachment = async (req, res) => {
     let files = Array.isArray(req.files.file) ? req.files.file : Array(req.files.file)
     for (let file of files) {
         console.log('FILE:  ', file.name)
-        let path = `/uploads/attachments/issues/${req.params.issueId}/${file.name}`
+        let path = `/uploads/attachments/issues/${req.params.issueId}`
         await mkdirp(path);
-        await file.mv(path, (err) => {
+        await file.mv(`${path}/${file.name}`, (err) => {
             if (err)
                 return res.status(500).send(err);
             let apiResponse = response.generate(false, 'File uploaded!', 200, null)
