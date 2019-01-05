@@ -189,7 +189,12 @@ export class DescriptionComponent implements OnInit {
   }// end getAttachments
 
   downloadAttachment(file) {
-    this.appService.downloadIssueAttachment(this.issue.issueId,file)
+    console.log('downloading ',file)
+    this.appService.downloadIssueAttachment(this.issue.issueId,file).subscribe(
+      response => {
+        console.log(response)
+      }
+    )
   }
 
   createComment() {

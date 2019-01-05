@@ -70,6 +70,17 @@ mat-progress-bar {
     font-size: 1.3rem
 }
 
+.attachment {
+    color: royalblue;
+    cursor: pointer;
+    transition: all 0.3s ease
+}
+
+.attachment:hover {
+    background-color: whitesmoke;
+    border-radius: 10px;
+}
+
 mat-tab-group {
     cursor: default
 }

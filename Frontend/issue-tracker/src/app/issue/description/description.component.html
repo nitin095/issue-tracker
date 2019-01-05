@@ -72,6 +72,14 @@
           <div class="heading-3">Linked issues</div>
         </div>
 
+        <!-- issue attachments -->
+        <div class="col-12 my-4" *ngIf="attachments">
+          <div class="heading-3 mb-2">Attachments</div>
+          <div class="row" *ngFor="let file of attachments">
+            <small class="col-auto attachment" (click)="downloadAttachment(file)">{{file}}</small>
+          </div>
+        </div>
+
         <!-- issue activity -->
         <div class="col-12 my-4">
           <div class="heading-3 mb-2">Activity</div>
@@ -201,7 +209,8 @@
             </mat-list>
           </div>
         </div>
-        <div *ngIf="!issue.assignee" (click)="permissions.changeAssignee.includes(userType)?addAssignee=true:''" class="col-12 text-muted py" [ngClass]="{'col-hover':userType==='reporter'}">Unassigned</div>
+        <div *ngIf="!issue.assignee" (click)="permissions.changeAssignee.includes(userType)?addAssignee=true:''" class="col-12 text-muted py"
+          [ngClass]="{'col-hover':userType==='reporter'}">Unassigned</div>
         <div *ngIf="issue.assignee" (click)="addAssignee=true" class="col-12 text-muted py" [ngClass]="{'col-hover':userType==='reporter'}">{{issue.assignee
           | userName | async}}</div>
 
@@ -209,12 +218,13 @@
         <span class="col-12 heading-sm mt-4">Labels</span>
         <div class="col-12 py" [ngClass]="{'col-hover':userType==='reporter'}">
           <mat-chip-list #chipList>
-            <mat-chip class="py-1" *ngFor="let label of issue.labels" selectable="true" [removable]="permissions.addLabels.includes(userType)?true:false" (removed)="removeLabel(label)">
+            <mat-chip class="py-1" *ngFor="let label of issue.labels" selectable="true" [removable]="permissions.addLabels.includes(userType)?true:false"
+              (removed)="removeLabel(label)">
               {{label}}
               <mat-icon *ngIf="permissions.addLabels.includes(userType)" matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <input *ngIf="permissions.addLabels.includes(userType)" placeholder="Add labels" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              (matChipInputTokenEnd)="addLabel($event)">
+            <input *ngIf="permissions.addLabels.includes(userType)" placeholder="Add labels" [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addLabel($event)">
           </mat-chip-list>
         </div>
 

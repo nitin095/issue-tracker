@@ -420,7 +420,7 @@ let getAttachments = (req, res) => {
 }// end  getAttachments
 
 let downloadAttachment = (req, res) => {
-    let path = __dirname + `/../../uploads/attachments/issues/${req.params.file}`;
+    let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}/${req.params.file}`;
     res.download(path);
 }
 
