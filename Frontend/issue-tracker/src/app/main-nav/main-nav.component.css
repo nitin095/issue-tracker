@@ -76,7 +76,7 @@ button[mat-button]{
   width: 20vw
 }
 
-mat-icon:focus {
+mat-icon:focus, button:active {
   outline: none
 }
 

@@ -20,17 +20,23 @@
       <div class="row">
 
         <!-- issue title -->
-        <div class="col-12">
-          <span class="heading-2">{{issue.title}}</span>
+        <div class="col-12 issue-title" [ngClass]="{'col-hover':userType==='reporter'}">
+          <div class="heading-2 full-width" *ngIf="!editTitle" (click)="userType==='reporter'?editTitle=true:''">{{issue.title}}</div>
+          <input type="text" #title value="{{issue.title}}" placeholder="Enter issue title" [style.display]="editTitle?'':'none'"
+            (keyup.enter)="editIssue({title:$event.target.value});editTitle=false">
+          <button *ngIf="editTitle" class="mt-2 mr-2 mb-1" mat-flat-button color="primary" (click)="editIssue({title:title.value});editTitle=false">Save</button>
+          <button *ngIf="editTitle" mat-stroked-button color="primary" (click)="editTitle=false">Cancel</button>
         </div>
 
         <!-- issue options -->
         <div class="col-12 my-2 issue-options">
-          <mat-icon class="mr-4" matTooltip="Add attachment" matRipple (click)="addAttachment=true">attachment</mat-icon>
-          <mat-icon class="mr-4" matTooltip="Link issue" matRipple>link</mat-icon>
-          <mat-icon class="mr-4" *ngIf="!issue.isFlagged" matTooltip="Add flag" matRipple (click)="editIssue({isFlagged:true})">outlined_flag</mat-icon>
-          <mat-icon class="mr-4" *ngIf="issue.isFlagged" matTooltip="Remove flag" style="color:red" matRipple (click)="editIssue({isFlagged:false})">flag</mat-icon>
-          <mat-icon matTooltip="Options" matRipple [matMenuTriggerFor]="menu">more_horiz</mat-icon>
+          <mat-icon *ngIf="userType==='reporter'" class="mr-4" matTooltip="Add attachment" matRipple (click)="addAttachment=true">attachment</mat-icon>
+          <mat-icon *ngIf="userType==='reporter'" class="mr-4" matTooltip="Link issue" matRipple>link</mat-icon>
+          <mat-icon *ngIf="permissions.addFlag.includes(userType)&&!issue.isFlagged" class="mr-4" matTooltip="Add flag"
+            matRipple (click)="editIssue({isFlagged:true})">outlined_flag</mat-icon>
+          <mat-icon *ngIf="permissions.addFlag.includes(userType)&&issue.isFlagged" class="mr-4" matTooltip="Remove flag"
+            style="color:red" matRipple (click)="editIssue({isFlagged:false})">flag</mat-icon>
+          <mat-icon *ngIf="userType==='reporter'" matTooltip="Options" matRipple [matMenuTriggerFor]="menu">more_horiz</mat-icon>
           <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="deleteIssue()">
               <mat-icon>delete</mat-icon>
@@ -50,9 +56,10 @@
 
         <!-- issue description -->
         <div class="col-12 my-2">
-          <div *ngIf="issue.description&&!addDescription" [innerHTML]="issue.description | sanitizedHTML" (click)="addDescription=true;description=issue.description"></div>
-          <div class="row">
-            <span class="text-muted col py-1 col-hover" *ngIf="!issue.description&&!addDescription" (click)="addDescription=true">Add
+          <div *ngIf="issue.description&&!addDescription" [innerHTML]="issue.description | sanitizedHTML" (click)="openDescriptionEditor()"></div>
+          <div class="row" *ngIf="userType==='reporter'">
+            <span class="text-muted col py-1" [ngClass]="{'col-hover':userType==='reporter'}" *ngIf="!issue.description&&!addDescription"
+              (click)="addDescription=true">Add
               a description..</span>
           </div>
           <angular-editor *ngIf="addDescription" [(ngModel)]="description" [config]="config"></angular-editor>
@@ -137,7 +144,7 @@
           <div class="row align-items-start justify-content-between">
             <div class="col-8 p-0">
               <span class="col-12 heading-sm">Status</span>
-              <div class="col-12 col-md-10 col-lg-9 col-xl-8">
+              <div *ngIf="permissions.statusChange.includes(userType)" class="col-12 col-md-10 col-lg-9 col-xl-8">
                 <mat-select [(ngModel)]="issue.status" (ngModelChange)="editIssue({status:issue.status})"
                   disableOptionCentering="true">
                   <mat-option value="backlog">Backlog</mat-option>
@@ -145,6 +152,9 @@
                   <mat-option value="inProgress">In Progress</mat-option>
                   <mat-option value="done">Done</mat-option>
                 </mat-select>
+              </div>
+              <div class="col-12" *ngIf="!permissions.statusChange.includes(userType)">
+                {{issue.status}}
               </div>
             </div>
             <div class="col-auto p-0">
@@ -185,32 +195,33 @@
               <mat-divider></mat-divider>
               <h3 mat-subheader>Project Team</h3>
               <mat-list-item *ngFor="let member of projectTeam" (click)="editIssue({assignee:member});addAssignee=false">
-                <span matListAvatar>AR</span>
-                <h3 matLine> {{member | userName | async}} </h3>
+                <span matListAvatar>{{member | userName:'initials' | async}}</span>
+                <h3 matLine>{{member | userName | async}}</h3>
               </mat-list-item>
             </mat-list>
           </div>
         </div>
-        <div *ngIf="!issue.assignee" (click)="addAssignee=true" class="col-12 text-muted py col-hover">Unassigned</div>
-        <div *ngIf="issue.assignee" (click)="addAssignee=true" class="col-12 text-muted py col-hover">{{issue.assignee
+        <div *ngIf="!issue.assignee" (click)="permissions.changeAssignee.includes(userType)?addAssignee=true:''" class="col-12 text-muted py" [ngClass]="{'col-hover':userType==='reporter'}">Unassigned</div>
+        <div *ngIf="issue.assignee" (click)="addAssignee=true" class="col-12 text-muted py" [ngClass]="{'col-hover':userType==='reporter'}">{{issue.assignee
           | userName | async}}</div>
 
         <!-- issue labels -->
         <span class="col-12 heading-sm mt-4">Labels</span>
-        <div class="col-12 py col-hover">
+        <div class="col-12 py" [ngClass]="{'col-hover':userType==='reporter'}">
           <mat-chip-list #chipList>
-            <mat-chip class="py-1" *ngFor="let label of issue.labels" selectable="true" removable="true" (removed)="removeLabel(label)">
+            <mat-chip class="py-1" *ngFor="let label of issue.labels" selectable="true" [removable]="permissions.addLabels.includes(userType)?true:false" (removed)="removeLabel(label)">
               {{label}}
-              <mat-icon matChipRemove>cancel</mat-icon>
+              <mat-icon *ngIf="permissions.addLabels.includes(userType)" matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <input placeholder="Add labels" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            <input *ngIf="permissions.addLabels.includes(userType)" placeholder="Add labels" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
               (matChipInputTokenEnd)="addLabel($event)">
           </mat-chip-list>
         </div>
 
         <!-- issue due date -->
         <span class="col-12 heading-sm mt-4">Due Date</span>
-        <div class="col-12 text-muted py col-hover" (click)="picker.open()">{{issue.dueDate | date}}<span *ngIf="!issue.dueDate">None</span></div>
+        <div class="col-12 text-muted py" [ngClass]="{'col-hover':userType==='reporter'}" (click)="userType==='reporter'?picker.open():''">{{issue.dueDate
+          | date}}<span *ngIf="!issue.dueDate">None</span></div>
         <mat-form-field class="d-none">
           <input matInput [matDatepicker]="picker" [(ngModel)]="issue.dueDate" (ngModelChange)="editIssue({dueDate:issue.dueDate})"
             placeholder="None">

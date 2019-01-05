@@ -165,3 +165,28 @@ mat-nav-list a {
     align-items: center;
     justify-content: center;
 }
+
+.notification-card {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 2;
+    background-color: royalblue;
+    color: #fff;
+    max-width: 30vw;
+    word-wrap: normal
+}
+
+.notification-card mat-card-subtitle {
+    color: lightgray
+}
+
+.notification-card button {
+    font-size: 0.8rem;
+    transition: all 0.3s ease
+}
+
+.notification-card button:hover {
+    background-color: #fff;
+    color: royalblue
+}

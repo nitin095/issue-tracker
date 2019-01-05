@@ -19,15 +19,24 @@ export class DescriptionComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   loading: Boolean = false;
   newIssue: Boolean = true;
+  userType: String;
   projectId: String;
   projectTeam = [];
   issue: any;
+  editTitle: Boolean = false;
   addDescription: Boolean = false;
   addAttachment: Boolean = false;
   addAssignee: Boolean = false;
   viewWatchers: Boolean = false;
   description: String;
   comment: String;
+  permissions = {
+    addFlag: ['reporter', 'assignee', 'teamMember'],
+    changeAssignee: ['reporter', 'assignee', 'teamMember'],
+    issueEdit: ['reporter'],
+    statusChange: ['assignee', 'reporter'],
+    addLabels: ['assignee', 'reporter']
+  }
   config: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -60,7 +69,11 @@ export class DescriptionComponent implements OnInit {
         this.loading = false;
         if (response.status === 200) {
           this.issue = response.data;
-          this.getProjectTeam(this.issue.projectId)
+          this.getProjectTeam(this.issue.projectId);
+          if (this.issue.reporter === this.userDetails.userId) this.userType = 'reporter'
+          else if (this.issue.assignee === this.userDetails.userId) this.userType = 'assignee'
+          else if (this.projectTeam.includes(this.userDetails.userId)) this.userType = 'teamMember'
+          else this.userType = 'other'
           console.log(response.data);
         } else {
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
@@ -91,6 +104,8 @@ export class DescriptionComponent implements OnInit {
         if (response.status === 200) {
           this.newIssue = false;
           this.issue = response.data;
+          this.userType = 'reporter';
+          this.getProjectTeam(this.issue.projectId);
           console.table(response.data)
         } else {
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
@@ -105,6 +120,14 @@ export class DescriptionComponent implements OnInit {
       }
     )
   }
+
+  openDescriptionEditor() {
+    if (this.userType === 'reporter') {
+      this.addDescription = true;
+      this.description = this.issue.description
+    } else return
+  }
+
 
   uploadAttachment() {
     this.loading = true;
@@ -308,7 +331,7 @@ export class DescriptionComponent implements OnInit {
     } else {
       this.issue.watchers.includes(this.userDetails.userId) ? this.issue.watchers.splice(this.issue.watchers.indexOf(this.userDetails.userId), 1) : ""
     }
-    this.editIssue({watchers: this.issue.watchers})
+    this.editIssue({ watchers: this.issue.watchers })
   }
 
 }

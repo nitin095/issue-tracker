@@ -53,6 +53,7 @@ let setServer = (server) => {
         eventEmitter.on('notification', (data) => {
             console.log('emitting notification')
             for (let id of data.receivers) {
+                console.log(id)
                 socket.emit(id, data);
             }
         })//end eventEmitter on notification

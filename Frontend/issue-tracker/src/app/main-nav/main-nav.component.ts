@@ -20,14 +20,15 @@ export class MainNavComponent {
     );
 
   userDetails = this.appService.getUserInfoFromLocalstorage();
-  url: string = "";
-  userName =  Cookie.get('receiverName');
+  url: string;
+  userName: String;
 
   constructor(private breakpointObserver: BreakpointObserver, private router: Router, private appService: AppService, public snackBar: MatSnackBar) {
     router.events.subscribe((val) => {
       this.url = this.router.url;
+      this.userName = Cookie.get('receiverName')
     });
-   }
+  }
 
   logout: any = () => {
     this.userDetails = this.appService.getUserInfoFromLocalstorage();

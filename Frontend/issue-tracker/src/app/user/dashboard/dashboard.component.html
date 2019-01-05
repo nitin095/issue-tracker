@@ -25,7 +25,7 @@
         <div class="col">
             <mat-sidenav-container class="sidenav-container">
                 <mat-sidenav #drawer class="sidenav" fixedInViewport="false" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-                    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+                    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)" (closedStart)="isDrawerOpened=false" (openedStart)="isDrawerOpened=true">
                     <mat-icon class="pt-2 px-3" (click)="drawer.toggle();isDrawerOpened=false">menu</mat-icon>
                     <mat-nav-list>
                         <a mat-list-item [ngClass]="{'active-side-nav':activeCategory.assigned}" (click)="makeActive('assigned')">
@@ -95,12 +95,16 @@
                                     <div class="col">
                                         <div class="row filters">
                                             <div class="col-auto">
-                                                <small (click)="filterIssues('InProgress')"><b>{{issuesStatusCount.inProgress}}</b> In progress</small><br>
-                                                <small (click)="filterIssues('todo')"><b>{{issuesStatusCount.toDo}}</b> To Do</small>
+                                                <small (click)="filterIssues('InProgress')"><b>{{issuesStatusCount.inProgress}}</b>
+                                                    In progress</small><br>
+                                                <small (click)="filterIssues('todo')"><b>{{issuesStatusCount.toDo}}</b>
+                                                    To Do</small>
                                             </div>
                                             <div class="col-auto">
-                                                <small (click)="filterIssues('done')"><b>{{issuesStatusCount.done}}</b> Done</small><br>
-                                                <small (click)="filterIssues('backlog')"><b>{{issuesStatusCount.backlog}}</b> Backlog</small>
+                                                <small (click)="filterIssues('done')"><b>{{issuesStatusCount.done}}</b>
+                                                    Done</small><br>
+                                                <small (click)="filterIssues('backlog')"><b>{{issuesStatusCount.backlog}}</b>
+                                                    Backlog</small>
                                             </div>
                                         </div>
                                     </div>
@@ -123,3 +127,21 @@
         </div>
     </div>
 </div>
+
+
+<!-- notification -->
+<mat-card *ngIf="notification.display" class="notification-card">
+    <mat-card-header>
+        <mat-card-title>{{notification.event}}</mat-card-title>
+        <mat-card-subtitle>{{notification.time | date}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <p class="px-3">
+            {{notification.editor|userName|async}}
+        </p>
+    </mat-card-content>
+    <mat-card-actions class="px-3">
+        <button mat-button [routerLink]="['/issue/browse',notification.issueId]">VIEW</button>
+        <button mat-button (click)="notification.display=false">DISMISS</button>
+    </mat-card-actions>
+</mat-card>

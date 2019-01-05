@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from './../../app.service';
 import { IssueService } from './../../issue/issue.service';
 import { MatSnackBar } from '@angular/material';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from "@angular/router";
-import { from } from 'rxjs';
+import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { SocketService } from './../../socket.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +16,10 @@ import { from } from 'rxjs';
 })
 export class DashboardComponent implements OnInit {
 
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.XSmall)
+    .pipe(
+      map(result => result.matches)
+    );
   userDetails = this.appService.getUserInfoFromLocalstorage();
   loading: Boolean = false;
   isDrawerOpened: Boolean = true;
@@ -21,17 +29,24 @@ export class DashboardComponent implements OnInit {
   allReporters: Set<String>;
   issues: any;
   issuesStatusCount: Object = { inProgress: 0, done: 0, toDo: 0, backlog: 0 };
-  activeCategory: Object = { assigned: true, reported: false, watching: false }
+  activeCategory: Object = { assigned: true, reported: false, watching: false };
+  authToken: any;
+  notification: any = {};
 
   constructor(
     private _route: ActivatedRoute,
     private router: Router,
     private appService: AppService,
     public snackBar: MatSnackBar,
+    public SocketService: SocketService,
+    private breakpointObserver: BreakpointObserver,
     private issueService: IssueService) { }
 
   ngOnInit() {
-    this.getProjects()
+    this.getProjects();
+    this.authToken = Cookie.get('authtoken');
+    this.verifyUserConfirmation();
+    this.getNotifications();
   }
 
   getProjects() {
@@ -185,5 +200,25 @@ export class DashboardComponent implements OnInit {
     }
 
   }
+
+  verifyUserConfirmation: any = () => {
+    this.SocketService.verifyUser()
+      .subscribe((data) => {
+        this.SocketService.setUser(this.authToken);
+      });
+  }
+
+  getNotifications(): any {
+
+    this.SocketService.notification().subscribe((data) => {
+      console.log(`%cNotification received!`, 'color:blue;font-weight:bold');
+      console.log(data);
+
+      this.notification = { event: data.event, editor: data.editor, time: data.time, issueId: data.issueId, data: data.data, display: true }
+
+    });
+
+  }//end getAlerts
+
 
 }

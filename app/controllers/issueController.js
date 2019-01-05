@@ -111,6 +111,16 @@ let createComment = (req, res) => {
                     console.log('Success in comment creation');
                     let apiResponse = response.generate(false, 'Comment created.', 200, result)
                     res.send(apiResponse);
+                    //sending notification to all watchers, assignee and reporter
+                    let notification = {
+                        event: 'comment',
+                        receivers: [...result.watchers, result.assignee, result.reporter],
+                        editor: req.user.userId,
+                        issueId: req.params.issueId,
+                        data: req.body.body,
+                        time: Date.now()
+                    }
+                    socketLib.sendNotification(notification)
                 }
             });
     }// end else
@@ -213,9 +223,10 @@ let editIssue = (req, res) => {
 
             //sending notification to all watchers, assignee and reporter
             let notification = {
-                event: 'Issue edited',
-                receivers: [...result.watchers + result.assignee + result.reporter],
+                event: 'issue edited',
+                receivers: [...result.watchers, result.assignee, result.reporter],
                 editor: req.user.userId,
+                issueId: req.params.issueId,
                 data: req.body,
                 time: Date.now()
             }

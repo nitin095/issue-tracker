@@ -35,6 +35,14 @@ mat-progress-bar {
     box-shadow: -1px 2px 12px -4px rgba(0,0,0,0.75);
 }
 
+.issue-title input {
+    font-size: 1.5rem;
+    border: none;
+    border-bottom: 1px solid royalblue;
+    background: none;
+    width: 100%;
+}
+
 .issue-options mat-icon {
     background: rgb(230, 229, 229);
     border-radius: 50%;
@@ -159,7 +167,8 @@ mat-chip-list input::placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #fff
+    color: #fff;
+    transform: scale(0.8)
 }
 
 .assignee-select-div mat-list-item:hover {
