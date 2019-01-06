@@ -97,8 +97,9 @@
     <!-- project team -->
     <span class="col-12 mt-4 mb-2 heading-3">Team</span>
     <div class="col-auto" *ngFor="let member of project.team">
-      <mat-card class="team-card">
+      <mat-card class="team-card mb-2">
         {{member | userName | async}}
+        <mat-icon *ngIf="project.createdBy===userDetails.userId" class="pl-1 remove-btn" (click)="removeUserFromTeam(member)">cancel</mat-icon>
       </mat-card>
     </div>
     <div class="col-auto">
@@ -142,7 +143,7 @@
       </div>
       <div class="row mb-4" *ngIf="users">
         <div class="col-auto my-2" *ngFor="let user of users">
-          <mat-card matRipple (click)="addMember(user.userId)" [ngClass]="{'already-member-card':project.team.includes(user.userId)}">
+          <mat-card matRipple (click)="addUserToTeam(user.userId)" [ngClass]="{'already-member-card':project.team.includes(user.userId)}">
             <mat-card-header class="align-items-center">
               <div mat-card-avatar class="example-header-image m-0 p-0">
                 <span *ngIf="!project.team.includes(user.userId)">{{user.firstName[0]}}{{user.lastName[0]}}</span>

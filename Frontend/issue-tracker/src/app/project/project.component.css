@@ -102,6 +102,19 @@ mat-card.team-card.add:hover {
     cursor: pointer;
 }
 
+.remove-btn {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    color: lightgrey;
+    cursor: pointer;
+    transition: all 0.3s ease
+}
+
+.remove-btn:hover {
+    color: rgb(214, 10, 10)
+}
+
 .mat-menu-item {
     outline: none
 }

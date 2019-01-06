@@ -174,8 +174,6 @@ export class DescriptionComponent implements OnInit {
         if (response.status === 200) {
           this.attachments = response.data;
           console.log(response.data)
-        } else {
-          console.log(response.message)
         }
       },
       error => {

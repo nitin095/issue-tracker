@@ -1,7 +1,7 @@
 <mat-progress-bar mode="indeterminate" color="warn" *ngIf="loading"></mat-progress-bar>
 <div class="container-fluid p-0">
     <div class="row no-gutters">
-        <div class="col-auto side-bar" *ngIf="!isDrawerOpened">
+        <div class="col-auto side-bar d-none d-sm-flex" *ngIf="!isDrawerOpened">
             <mat-nav-list>
                 <a mat-list-item (click)="drawer.toggle();isDrawerOpened=true">
                     <mat-icon>menu</mat-icon>
@@ -25,7 +25,8 @@
         <div class="col">
             <mat-sidenav-container class="sidenav-container">
                 <mat-sidenav #drawer class="sidenav" fixedInViewport="false" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-                    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)" (closedStart)="isDrawerOpened=false" (openedStart)="isDrawerOpened=true">
+                    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)" (closedStart)="isDrawerOpened=false"
+                    (openedStart)="isDrawerOpened=true">
                     <mat-icon class="pt-2 px-3" (click)="drawer.toggle();isDrawerOpened=false">menu</mat-icon>
                     <mat-nav-list>
                         <a mat-list-item [ngClass]="{'active-side-nav':activeCategory.assigned}" (click)="makeActive('assigned')">
@@ -64,17 +65,17 @@
                 <mat-sidenav-content>
                     <div class="container-fluid">
                         <div class="row py-4 header-row sticky-top align-items-center">
-                            <div class="col">
+                            <div class="col-12 col-md-auto">
                                 <div class="row">
                                     <div class="col-12 display-4 title mb-2">
                                         <span *ngIf="activeCategory.assigned">Assigned Issues</span>
                                         <span *ngIf="activeCategory.reported">Reported Issues</span>
                                         <span *ngIf="activeCategory.watching">Issues watching</span>
                                     </div>
-                                    <div class="col-8">
+                                    <div class="col-12 col-md-8">
                                         <input (keyup)="filterIssues($event.target.value)" placeholder="Filter by title, status or date">
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-12 pt-2 col-md-4 pt-md-0">
                                         <mat-select [(ngModel)]="selectedReporter" (ngModelChange)="filterReporter(selectedReporter)"
                                             disableOptionCentering="true">
                                             <mat-option *ngFor="let reporter of allReporters" [value]="reporter">
@@ -84,9 +85,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-auto issue-count ml-auto" *ngIf="issues">
+                            <div class="d-none d-lg-block col-lg-auto issue-count ml-auto" *ngIf="issues">
                                 <div class="row">
-                                    <div class="col-auto" (click)="resetIssues()">
+                                    <div class="col-md-3 col-lg-auto" (click)="resetIssues()">
                                         <div class="row">
                                             <div class="col-12 display-4 text-center">{{allIssues.length}}</div>
                                             <small class="col-12 text-center">Issues</small>
@@ -132,13 +133,14 @@
 <!-- notification -->
 <mat-card *ngIf="notification.display" class="notification-card">
     <mat-card-header>
-        <mat-card-title>{{notification.event}}</mat-card-title>
+        <mat-card-title *ngIf="notification.event==='comment'">{{notification.editor|userName|async}} commented on
+            {{notification.issueId | issueTitle | async}}</mat-card-title>
+        <mat-card-title *ngIf="notification.event!=='comment'">{{notification.editor|userName|async}} edited
+            {{notification.issueId | issueTitle | async}}</mat-card-title>
         <mat-card-subtitle>{{notification.time | date}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <p class="px-3">
-            {{notification.editor|userName|async}}
-        </p>
+        <p class="px-3" *ngIf="notification.event==='comment'" [innerHTML]="notification.data"></p>
     </mat-card-content>
     <mat-card-actions class="px-3">
         <button mat-button [routerLink]="['/issue/browse',notification.issueId]">VIEW</button>

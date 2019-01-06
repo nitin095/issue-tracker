@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DataTableComponent } from './data-table/data-table.component';
 import { UserNamePipe } from './user-name.pipe';
 import { SanitizedHTMLPipe } from './sanitized-html.pipe';
+import { IssueTitlePipe } from './issue-title.pipe';
 import { FileUploadModule } from '@iplab/ngx-file-upload';
 import {
   MatButtonModule,
@@ -36,7 +37,7 @@ import {
 } from '@angular/material';
 
 @NgModule({
-  declarations: [DataTableComponent, UserNamePipe, SanitizedHTMLPipe],
+  declarations: [DataTableComponent, UserNamePipe, SanitizedHTMLPipe, IssueTitlePipe],
   imports: [
     CommonModule,
     RouterModule,
@@ -72,6 +73,7 @@ import {
     MatTabsModule,
     MatSlideToggleModule,
     UserNamePipe,
+    IssueTitlePipe,
     SanitizedHTMLPipe,
     FileUploadModule
   ]

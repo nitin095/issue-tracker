@@ -25,3 +25,29 @@ tr[mat-header-row] {
 .red-bg {
   background-color: rgb(252, 222, 222)
 }
+
+
+
+/* Media queries */
+
+/*extra small devices*/
+@media screen and (max-width: 575px) {    
+  td {
+    font-size: 0.7rem
+  }
+}
+
+/*small devices*/
+@media screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+
+
+/*medium devices*/
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  
+}
+
+/*large devices*/
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+}

@@ -107,11 +107,11 @@ export class ProjectComponent implements OnInit {
   uploadAttachment() {
     this.loading = true;
     this.fileUploadControl.disable();
-    this.appService.addIssueAttachment(this.project.projectId,this.uploadedFiles).subscribe(
+    this.appService.addIssueAttachment(this.project.projectId, this.uploadedFiles).subscribe(
       event => {
-        if(event.type === HttpEventType.UploadProgress){
-          console.log('Upload Progress: '+ Math.round(event.loaded/event.total * 100)+'%')
-        } else if (event.type === HttpEventType.Response){
+        if (event.type === HttpEventType.UploadProgress) {
+          console.log('Upload Progress: ' + Math.round(event.loaded / event.total * 100) + '%')
+        } else if (event.type === HttpEventType.Response) {
           this.loading = false;
           if (event.status === 200) {
             this.addAttachment = false;
@@ -141,7 +141,7 @@ export class ProjectComponent implements OnInit {
   searchUsers(searchQuery) {
     if (!searchQuery) return
     this.loading = true;
-    this.appService.searchUsers(this.userDetails.userId,searchQuery).subscribe(
+    this.appService.searchUsers(this.userDetails.userId, searchQuery).subscribe(
       response => {
         this.loading = false;
         if (response.status === 200) {
@@ -161,6 +161,18 @@ export class ProjectComponent implements OnInit {
     )
   }// end  getIssues
 
+  addUserToTeam(user) {
+    if (!this.project.team.includes(user)) {
+      this.project.team.push(user);
+      this.editproject({ team: this.project.team })
+    } else return
+  }
+
+  removeUserFromTeam(user) {
+    this.project.team.splice(this.project.team.indexOf(user), 1);
+    this.editproject({ team: this.project.team })
+  }
+
   addMember(id) {
     if (!this.projectTeam.includes(id)) this.projectTeam.push(id)
     else return
@@ -172,7 +184,7 @@ export class ProjectComponent implements OnInit {
 
   editproject(field) {
     this.loading = true;
-    this.appService.editProject(this.project.projectId,field).subscribe(
+    this.appService.editProject(this.project.projectId, field).subscribe(
       response => {
         this.loading = false;
         if (response.status === 200) {

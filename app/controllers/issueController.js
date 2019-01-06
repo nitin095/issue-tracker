@@ -115,9 +115,10 @@ let createComment = (req, res) => {
                     let apiResponse = response.generate(false, 'Comment created.', 200, result)
                     res.send(apiResponse);
                     //sending notification to all watchers, assignee and reporter
+                    let receivers = new Set([...result.watchers, result.assignee, result.reporter])
                     let notification = {
                         event: 'comment',
-                        receivers: [...result.watchers, result.assignee, result.reporter],
+                        receivers: Array(receivers),
                         editor: req.user.userId,
                         issueId: req.params.issueId,
                         data: req.body.body,
@@ -225,9 +226,10 @@ let editIssue = (req, res) => {
             res.send(apiResponse)
 
             //sending notification to all watchers, assignee and reporter
+            let receivers = new Set([...result.watchers, result.assignee, result.reporter])
             let notification = {
                 event: 'issue edited',
-                receivers: [...result.watchers, result.assignee, result.reporter],
+                receivers: Array(receivers),
                 editor: req.user.userId,
                 issueId: req.params.issueId,
                 data: req.body,
