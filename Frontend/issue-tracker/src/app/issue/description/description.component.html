@@ -73,7 +73,7 @@
         </div>
 
         <!-- issue attachments -->
-        <div class="col-12 my-4" *ngIf="attachments">
+        <div class="col-12 my-4" *ngIf="attachments.length>0">
           <div class="heading-3 mb-2">Attachments</div>
           <div class="row" *ngFor="let file of attachments">
             <small class="col-auto attachment">
@@ -93,7 +93,10 @@
                 <div class="row my-3 justify-content-end">
                   <small class="col-auto text-muted">{{issue.comments.length}} Comments </small>
                   <small class="col-auto sort-col text-muted">
-                    <mat-icon>sort</mat-icon>Sort by<span>Newest first</span><span>Oldest first</span>
+                    <mat-icon>sort</mat-icon>Sort by<span [ngClass]="{active:issue.sort==='new'}" (click)="sortComments('new');issue.sort='new'">Newest
+                      first</span>
+                    <span [ngClass]="{active:issue.sort==='old'}" (click)="sortComments('old');issue.sort='old'">Oldest
+                      first</span>
                   </small>
                 </div>
                 <div class="row my-4" *ngFor="let comment of issue.comments">

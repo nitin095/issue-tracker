@@ -175,12 +175,10 @@ export class DescriptionComponent implements OnInit {
           this.attachments = response.data;
           console.log(response.data)
         } else {
-          this.snackBar.open(response.message, 'Close', { duration: 4000, });
           console.log(response.message)
         }
       },
       error => {
-        this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
         this.loading = false;
         console.log("some error occured");
         console.log(error)
@@ -199,10 +197,10 @@ export class DescriptionComponent implements OnInit {
         this.loading = false;
         if (response.status === 200) {
           this.attachments.splice(this.attachments.indexOf(file), 1)
-          console.log(response.data)
+          console.log(response)
         } else {
           this.snackBar.open(response.message, 'Close', { duration: 4000, });
-          console.log(response.message)
+          console.log(response)
         }
       },
       error => {
@@ -284,6 +282,18 @@ export class DescriptionComponent implements OnInit {
       }
     )
   }//end editComment
+
+  sortComments(sort) {
+    this.issue.comments.sort((a, b) => {
+      if (a.createdOn > b.createdOn) {
+        return sort === 'new' ? -1 : 1;
+      }
+      if (a.createdOn < b.createdOn) {
+        return sort === 'new' ? 1 : -1;
+      }
+      return 0;
+    })
+  }
 
   addLabel(event: MatChipInputEvent): void {
     const input = event.input;

@@ -405,17 +405,26 @@ let getAttachments = (req, res) => {
         res.send(apiResponse);
     } else {
         let folderPath = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}`;
-        let files = [];
-        fs.readdirSync(folderPath).map(fileName => {
-            files.push(fileName)
+        fs.access(folderPath, fs.F_OK, (err) => {
+            if (err) {
+                console.error(err);
+                let apiResponse = response.generate(true, 'No file found!', 404, null)
+                res.send(apiResponse);
+                return
+            }
+            let files = [];
+            fs.readdirSync(folderPath).map(fileName => {
+                files.push(fileName)
+            })
+            if (files.length > 0) {
+                let apiResponse = response.generate(false, 'Files found!', 200, files)
+                res.send(apiResponse);
+            } else {
+                let apiResponse = response.generate(true, 'No file found!', 404, null)
+                res.send(apiResponse);
+            }
+
         })
-        if (files.length > 0) {
-            let apiResponse = response.generate(false, 'Files found!', 200, files)
-            res.send(apiResponse);
-        } else {
-            let apiResponse = response.generate(false, 'No file found!', 404, null)
-            res.send(apiResponse);
-        }
     }
 }// end  getAttachments
 
@@ -437,7 +446,7 @@ let deleteAttachment = (req, res) => {
         let path = __dirname + `/../../uploads/attachments/issues/${req.params.issueId}/${req.params.file}`;
         fs.unlink(path, (err) => {
             if (err) {
-                let apiResponse = response.generate(false, 'No file found!', 404, null)
+                let apiResponse = response.generate(true, 'No file found!', 404, null)
                 res.send(apiResponse);
             } else {
                 let apiResponse = response.generate(false, 'File deleted!', 200, null)

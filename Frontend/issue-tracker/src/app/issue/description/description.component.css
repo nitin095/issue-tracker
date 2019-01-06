@@ -99,7 +99,16 @@ mat-tab-group {
 }
 
 .sort-col span {
-    margin-left: 0.8rem
+    margin-left: 0.8rem;
+    cursor: pointer;
+}
+
+.sort-col span.active {
+    color:royalblue
+}
+
+.sort-col span:hover {
+    color: #000
 }
 
 .user-circle {
