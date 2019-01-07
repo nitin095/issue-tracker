@@ -9,14 +9,7 @@ mat-progress-bar {
     overflow-y: scroll
 }
 
-.search-header {
-    /* background-color: rgb(63,81,181); */
-    /* -webkit-box-shadow: inset 0px -3px 46px -7px rgba(0,0,0,0.75);
-    -moz-box-shadow: inset 0px -3px 46px -7px rgba(0,0,0,0.75);
-    box-shadow: inset 0px -3px 46px -7px rgba(0,0,0,0.75); */
-}
-
-.search-header > .col-6 {
+.search-header > div {
     display: flex;
     padding: 1rem;
     border-radius: 8px;

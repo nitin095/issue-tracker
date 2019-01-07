@@ -42,7 +42,8 @@ button[mat-button]{
   transition: all 0.3s ease;
   font-size: small;
   background: rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease
+  transition: all 0.3s ease;
+  flex: 1 1 auto;
 }
 
 .search-issue-input mat-icon {
@@ -73,7 +74,6 @@ button[mat-button]{
 
 .search-issue-input input:focus {
   outline: none;
-  width: 20vw
 }
 
 mat-icon:focus, button:active {
@@ -81,5 +81,9 @@ mat-icon:focus, button:active {
 }
 
 .mat-menu-item {
+  outline: none
+}
+
+button:focus {
   outline: none
 }

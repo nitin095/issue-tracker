@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   userDetails = this.appService.getUserInfoFromLocalstorage();
   loading: Boolean = false;
   isDrawerOpened: Boolean = true;
+  showMobileFilters: Boolean = false;
   allprojects: any;
   activeProject: any;
   allIssues: any;
@@ -127,6 +128,7 @@ export class DashboardComponent implements OnInit {
           console.log(response.data)
           this.allIssues = response.data;
           this.issues = this.allIssues;
+          this.allReporters = new Set(this.allIssues.map(x => x.reporter));
           this.makeActive('assigned')
         } else {
           this.allIssues = null;

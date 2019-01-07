@@ -13,7 +13,7 @@ module.exports.setRouter = (app) => {
 	app.get(`${baseUrl}/all/:userId`, auth.isAuthorized, projectController.getAllProjects);
 
     /**
-	 * @api {get} /api/v1/projects/view/:userId Get all projects user is collaborating in.
+	 * @api {get} /api/v1/projects/all/:userId Get all projects user is a team member of.
 	 * @apiVersion 0.0.1
 	 * @apiGroup read
 	 *
@@ -23,25 +23,23 @@ module.exports.setRouter = (app) => {
 	 *  @apiSuccessExample {json} Success-Response:
 	 *  {
 	    "error": false,
-	    "message": "Project edited",
+	    "message": "Project Details Found",
 	    "status": 200,
-	    "data": [
-				 	{
-						"tasks": [
-							"taskId1",
-							"taskId2"
-						],
-						"notes": "String",
-						"collaborators": [Array<string>],
-						"isDone": Boolean,
-						"projectId": "String",
-						"createdBy": "String",
-						"title": "String",
-						"createdOn": "Date",
-						"lastModified": "Date"
-        			}
-	    		]
-	    }
+	    "data": {[
+			{
+				title: "String"
+				reatedBy: "String"
+				createdOn: Date
+				description: "String"
+				isStarred: Blloean
+				issues: [Array<String>]
+				key: "String"
+				lastModified: Date
+				projectId: "String"
+				team: [Array<String>]
+			},{...}
+		]}
+		
 	  @apiErrorExample {json} Error-Response:
 	 *
 	 * {
@@ -69,20 +67,18 @@ module.exports.setRouter = (app) => {
 	    "message": "Project Found Successfully.",
 	    "status": 200,
 	    "data": {
-					"tasks": [
-						"taskId1",
-						"taskId2"
-					],
-					"notes": "String",
-					"collaborators": [Array<string>],
-					"isDone": Boolean,
-					"projectId": "String",
-					"createdBy": "String",
-					"title": "String",
-					"createdOn": "Date",
-					"lastModified": "Date"
-        		}
-	    }
+					title: "String"
+					reatedBy: "String"
+					createdOn: Date
+					description: "String"
+					isStarred: Blloean
+					issues: [Array<String>]
+					key: "String"
+					lastModified: Date
+					projectId: "String"
+					team: [Array<String>]
+				}
+				
 	  @apiErrorExample {json} Error-Response:
 	 *
 	 * {
@@ -110,10 +106,19 @@ module.exports.setRouter = (app) => {
 	    "error": false,
 	    "message": "Project created Successfully",
 	    "status": 200,
-	    "data": []
-	    	}
-		}
-	}
+	     "data": {
+					title: "String"
+					reatedBy: "String"
+					createdOn: Date
+					description: "String"
+					isStarred: Blloean
+					issues: [Array<String>]
+					key: "String"
+					lastModified: Date
+					projectId: "String"
+					team: [Array<String>]
+				}
+				
 	  @apiErrorExample {json} Error-Response:
 	 *
 	 * {
@@ -141,22 +146,19 @@ module.exports.setRouter = (app) => {
 	    "error": false,
 	    "message": "Project Edited Successfully.",
 	    "status": 200,
-	    "data": [
-					"tasks": [
-						"taskId1",
-						"taskId2",
-						...
-					],
-					"notes": "String",
-					"collaborators": [Array<string>],
-					"isDone": Boolean,
-					"projectId": "String",
-					"createdBy": "String",
-					"title": "String",
-					"createdOn": "Date",
-					"lastModified": "Date"
-	    		]
-		}
+	     "data": {
+					title: "String"
+					reatedBy: "String"
+					createdOn: Date
+					description: "String"
+					isStarred: Blloean
+					issues: [Array<String>]
+					key: "String"
+					lastModified: Date
+					projectId: "String"
+					team: [Array<String>]
+				}
+				
 	  @apiErrorExample {json} Error-Response:
 	 *
 	 * {

@@ -22,11 +22,12 @@ export class MainNavComponent {
   userDetails = this.appService.getUserInfoFromLocalstorage();
   url: string;
   userName: String;
+  searchOnMobile: Boolean = false;
 
   constructor(private breakpointObserver: BreakpointObserver, private router: Router, private appService: AppService, public snackBar: MatSnackBar) {
     router.events.subscribe((val) => {
       this.url = this.router.url;
-      this.userName = Cookie.get('receiverName')
+      this.userName = Cookie.get('receiverName');
     });
   }
 

@@ -6,11 +6,11 @@ const auth = require('./../middlewares/auth')
 
 module.exports.setRouter = (app) => {
 
-    let baseUrl = `${appConfig.apiVersion}/users`;
+	let baseUrl = `${appConfig.apiVersion}/users`;
 
-    // defining routes.
+	// defining routes.
 
-    app.get(`${baseUrl}/view/:users`, auth.isAuthorized, userController.getUsers);
+	app.get(`${baseUrl}/view/:users`, auth.isAuthorized, userController.getUsers);
 
     /**
 	 * @api {get} /api/v1/users/view/all Get all users
@@ -48,7 +48,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-    app.get(`${baseUrl}/:userId/details`, auth.isAuthorized, userController.getSingleUser);
+	app.get(`${baseUrl}/:userId/details`, auth.isAuthorized, userController.getSingleUser);
 
     /**
 	 * @api {get} /api/v1/users/:userId/details Get a single user
@@ -97,17 +97,19 @@ module.exports.setRouter = (app) => {
 	 *  @apiSuccessExample {json} Success-Response:
 	 *  {
 	    "error": false,
-	    "message": "User Found Successfully.",
+	    "message": "Users Found Successfully.",
 	    "status": 200,
-	    "data": {
-            userId: "string",
-            firstName: "string",
-            lastName: "string",
-            email: "mstring",
-            countryCode: number,
-            mobileNumber: number,
-            createdOn: "Date",
-				}
+	    "data": {[
+					userId: "string",
+					firstName: "string",
+					lastName: "string",
+					email: "mstring",
+					countryCode: number,
+					mobileNumber: number,
+					createdOn: "Date",
+				],[
+					...
+				]}
 	    }
 	  @apiErrorExample {json} Error-Response:
 	 *
@@ -120,7 +122,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-    app.post(`${baseUrl}/signup`, userController.signUpFunction);
+	app.post(`${baseUrl}/signup`, userController.signUpFunction);
 
     /**
 	 * @api {post} /api/v1/users/signup Signup user
@@ -154,7 +156,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-    app.post(`${baseUrl}/login`, userController.loginFunction);
+	app.post(`${baseUrl}/login`, userController.loginFunction);
 
     /**
 	 * @api {post} /api/v1/users/login Login user
@@ -187,7 +189,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-    app.put(`${baseUrl}/:userId/edit`, auth.isAuthorized, userController.editUser);
+	app.put(`${baseUrl}/:userId/edit`, auth.isAuthorized, userController.editUser);
 
     /**
 	 * @api {put} /api/v1/users/:userId/edit Edit user by userId
@@ -225,7 +227,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-    app.put(`${baseUrl}/forgotPassword`, userController.forgotPassword);
+	app.put(`${baseUrl}/forgotPassword`, userController.forgotPassword);
 
     /**
 	 * @api {put} /api/v1/users/forgotPassword Recover password by user email
@@ -256,7 +258,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-    app.put(`${baseUrl}/resetPassword`, userController.resetPassword);
+	app.put(`${baseUrl}/resetPassword`, userController.resetPassword);
 
     /**
 	 * @api {put} /api/v1/users/resetPassword Reset password by password reset token
@@ -287,7 +289,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-    app.post(`${baseUrl}/:userId/delete`, auth.isAuthorized, userController.deleteUser);
+	app.post(`${baseUrl}/:userId/delete`, auth.isAuthorized, userController.deleteUser);
 
     /**
 	 * @api {post} /api/v1/users/delete Delete user by userId
@@ -317,7 +319,7 @@ module.exports.setRouter = (app) => {
 	 */
 
 
-    app.post(`${baseUrl}/logout`, auth.isAuthorized, userController.logout);
+	app.post(`${baseUrl}/logout`, auth.isAuthorized, userController.logout);
 
     /**
     * @api {post} /api/v1/users/logout Logout user by authToken

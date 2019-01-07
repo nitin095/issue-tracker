@@ -285,3 +285,21 @@ mat-chip-list input::placeholder {
     color: #fff;
     transform: scale(0.8)
 }
+
+
+/* Media queries */
+
+/*extra small devices*/
+@media screen and (max-width: 575px) {     
+    .main-container {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }    
+}
+  
+  /*small devices*/
+  @media screen and (min-width: 576px) and (max-width: 767px) {
+    .header-row mat-select {
+        display: none
+    }
+  }

@@ -29,10 +29,6 @@ let projectSchema = new Schema({
         default: '',
         uppercase: true
     },
-    url: {
-        type: String,
-        default: ''
-    },
     team: [],
     isStarred: {
         type: Boolean,

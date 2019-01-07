@@ -26,35 +26,31 @@ module.exports.setRouter = (app) => {
 			  message: "All Issue Details Found", 
 			  status: 200, 
 			  data: {
-				assignees: [array]
-				comments: [array]
-				createdBy: "string"
-				createdOn: "date"
-				dueDate: "date"
-				isDone: boolean
-				isImportant: boolean
-				lastModified: "date"
-				projectId: "string"
-				notes: "string"
-				reminder: Array
-				subIssue: [{
-					assignees: [array]
-					comments: [array]
-					createdBy: "string"
-					dueDate: "date"
-					isDone: boolean
-					title: "string"
-					_id: "string
-					},
-					...
-					]
-				issueId: "string"
-				title: "string"
-				today: boolean
-				_id: "string"
-			  },
-			  ...
-			}
+				  title: "String"
+				  status: "String"
+				  assignee: "String"
+				  comments: [{
+					  body: "String"
+					  createdBy: "String"
+					  createdOn: "Date"
+					  lastModified: "Date"
+					  },
+					  ...
+					  ],
+				  createdOn: "Date"
+				  description: "String"
+				  dueDate: "Date"
+				  isFlagged: Boolean
+				  issueId: "String"
+				  issueNumber: Number
+				  labels: [Array<String>]
+				  lastModified: "Date"
+				  linkedIssues: [Array<String>]
+				  projectId: "String"
+				  reporter: "String"
+				},
+			  		...
+				}
 
 	 * @apiErrorExample {json} Error-Response:
 	 *
@@ -71,7 +67,7 @@ module.exports.setRouter = (app) => {
 	app.get(`${baseUrl}/project/:projectId`, auth.isAuthorized, issueController.getProjectIssues);
 
     /**
-	 * @api {get} /api/v1/issues/view/all Get all issues of the project
+	 * @api {get} /api/v1/issues/project/:projectId Get all issues of the project
 	 * @apiVersion 0.0.1
 	 * @apiGroup read
 	 *
@@ -84,35 +80,32 @@ module.exports.setRouter = (app) => {
 			  message: "Project Issues Found", 
 			  status: 200, 
 			  data: {
-				assignees: [array]
-				comments: [array]
-				createdBy: "string"
-				createdOn: "date"
-				dueDate: "date"
-				isDone: boolean
-				isImportant: boolean
-				lastModified: "date"
-				projectId: "string"
-				notes: "string"
-				reminder: Array
-				subIssue: [{
-					assignees: [array]
-					comments: [array]
-					createdBy: "string"
-					dueDate: "date"
-					isDone: boolean
-					title: "string"
-					_id: "string
-					},
-					...
-					]
-				issueId: "string"
-				title: "string"
-				today: boolean
-				_id: "string"
-			  },
-			  ...
-	    }
+				  title: "String"
+				  status: "String"
+				  assignee: "String"
+				  comments: [{
+					  body: "String"
+					  createdBy: "String"
+					  createdOn: "Date"
+					  lastModified: "Date"
+					  },
+					  ...
+					  ],
+				  createdOn: "Date"
+				  description: "String"
+				  dueDate: "Date"
+				  isFlagged: Boolean
+				  issueId: "String"
+				  issueNumber: Number
+				  labels: [Array<String>]
+				  lastModified: "Date"
+				  linkedIssues: [Array<String>]
+				  projectId: "String"
+				  reporter: "String"
+				},
+			  		...
+				}
+
 	  @apiErrorExample {json} Error-Response:
 	 *
 	 * {
@@ -139,35 +132,31 @@ module.exports.setRouter = (app) => {
 	    error: false, 
 		message: "Issue Details Found", 
 		status: 200, 
-		data: {
-			assignees: [array]
-			comments: [array]
-			createdBy: "string"
-			createdOn: "date"
-			dueDate: "date"
-			isDone: boolean
-			isImportant: boolean
-			lastModified: "date"
-			projectId: "string"
-			notes: "string"
-			reminder: Array
-			subIssue: [{
-				assignees: [array]
-				comments: [array]
-				createdBy: "string"
-				dueDate: "date"
-				isDone: boolean
-				title: "string"
-				_id: "string
-				},
-				...
-				]
-			issueId: "string"
-			title: "string"
-			today: boolean
-			_id: "string"
-			}
-	    }
+		  data: {
+				  title: "String"
+				  status: "String"
+				  assignee: "String"
+				  comments: [{
+					  body: "String"
+					  createdBy: "String"
+					  createdOn: "Date"
+					  lastModified: "Date"
+					  },
+					  ...
+					  ],
+				  createdOn: "Date"
+				  description: "String"
+				  dueDate: "Date"
+				  isFlagged: Boolean
+				  issueId: "String"
+				  issueNumber: Number
+				  labels: [Array<String>]
+				  lastModified: "Date"
+				  linkedIssues: [Array<String>]
+				  projectId: "String"
+				  reporter: "String"
+				}
+
 	  @apiErrorExample {json} Error-Response:
 	 *
 	 * {
@@ -182,7 +171,7 @@ module.exports.setRouter = (app) => {
 	app.get(`${baseUrl}/search/:search`, auth.isAuthorized, issueController.searchIssues);
 
     /**
-	 * @api {get} /api/v1/issues/:issueId/details Search issues
+	 * @api {get} /api/v1/issues/search/:search Search issues
 	 * @apiVersion 0.0.1
 	 * @apiGroup read
 	 *
@@ -194,35 +183,32 @@ module.exports.setRouter = (app) => {
 	    error: false, 
 		message: "Issue Details Found", 
 		status: 200, 
-		data: {
-			assignees: [array]
-			comments: [array]
-			createdBy: "string"
-			createdOn: "date"
-			dueDate: "date"
-			isDone: boolean
-			isImportant: boolean
-			lastModified: "date"
-			projectId: "string"
-			notes: "string"
-			reminder: Array
-			subIssue: [{
-				assignees: [array]
-				comments: [array]
-				createdBy: "string"
-				dueDate: "date"
-				isDone: boolean
-				title: "string"
-				_id: "string
+		  data: {
+				  title: "String"
+				  status: "String"
+				  assignee: "String"
+				  comments: [{
+					  body: "String"
+					  createdBy: "String"
+					  createdOn: "Date"
+					  lastModified: "Date"
+					  },
+					  ...
+					  ],
+				  createdOn: "Date"
+				  description: "String"
+				  dueDate: "Date"
+				  isFlagged: Boolean
+				  issueId: "String"
+				  issueNumber: Number
+				  labels: [Array<String>]
+				  lastModified: "Date"
+				  linkedIssues: [Array<String>]
+				  projectId: "String"
+				  reporter: "String"
 				},
-				...
-				]
-			issueId: "string"
-			title: "string"
-			today: boolean
-			_id: "string"
-			}
-	    }
+			  		...
+				}
 	  @apiErrorExample {json} Error-Response:
 	 *
 	 * {
@@ -232,7 +218,6 @@ module.exports.setRouter = (app) => {
 	    "data": null
 	   }
 	 */
-
 
 
 	app.post(`${baseUrl}/create`, auth.isAuthorized, issueController.createIssue);
@@ -251,7 +236,32 @@ module.exports.setRouter = (app) => {
 	    "error": false,
 	    "message": "Issue Created Successfully",
 	    "status": 200,
-	    "data": [...]
+	      data: {
+				  title: "String"
+				  status: "String"
+				  assignee: "String"
+				  comments: [{
+					  body: "String"
+					  createdBy: "String"
+					  createdOn: "Date"
+					  lastModified: "Date"
+					  },
+					  ...
+					  ],
+				  createdOn: "Date"
+				  description: "String"
+				  dueDate: "Date"
+				  isFlagged: Boolean
+				  issueId: "String"
+				  issueNumber: Number
+				  labels: [Array<String>]
+				  lastModified: "Date"
+				  linkedIssues: [Array<String>]
+				  projectId: "String"
+				  reporter: "String"
+				},
+			  		...
+				}
 		}
 	
 	 * @apiErrorExample {json} Error-Response:
@@ -268,14 +278,13 @@ module.exports.setRouter = (app) => {
 	app.post(`${baseUrl}/comment/:issueId`, auth.isAuthorized, issueController.createComment);
 
     /**
-	 * @api {post} /api/v1/issues/create Create new issue comment
+	 * @api {post} /api/v1/issues/comment/create Create new issue comment
 	 * @apiVersion 0.0.1
 	 * @apiGroup create
 	 *
 	 * @apiParam {String} authToken The token for authentication.(Send authToken as query parameter, body parameter or as a header)
 	 * @apiParam {String} createdBy userId of the creator passed as the body parameter
-     * @apiParam {String} title Title of the issue passed as the body parameter
-     * @apiParam {Number} notes Notes of the issue passed as the body parameter
+     * @apiParam {String} body body of the comment passed as the body parameter
 	 *
 	 *  @apiSuccessExample {json} Success-Response:
 	 *  {
@@ -311,7 +320,32 @@ module.exports.setRouter = (app) => {
 	    "error": false,
 	    "message": "Issue Edited Successfully.",
 	    "status": 200,
-	    "data": [...]	
+	      data: {
+				  title: "String"
+				  status: "String"
+				  assignee: "String"
+				  comments: [{
+					  body: "String"
+					  createdBy: "String"
+					  createdOn: "Date"
+					  lastModified: "Date"
+					  },
+					  ...
+					  ],
+				  createdOn: "Date"
+				  description: "String"
+				  dueDate: "Date"
+				  isFlagged: Boolean
+				  issueId: "String"
+				  issueNumber: Number
+				  labels: [Array<String>]
+				  lastModified: "Date"
+				  linkedIssues: [Array<String>]
+				  projectId: "String"
+				  reporter: "String"
+				},
+			  		...
+				}	
 		}
 	  @apiErrorExample {json} Error-Response:
 	 *
@@ -327,7 +361,7 @@ module.exports.setRouter = (app) => {
 	app.put(`${baseUrl}/:issueId/edit/comment`, auth.isAuthorized, issueController.editComment);
 
     /**
-	 * @api {put} /api/v1/blogs/:issueId/edit Edit issue comment by commentId
+	 * @api {put} /api/v1/issues/:issueId/edit/comment Edit issue comment by commentId
 	 * @apiVersion 0.0.1
 	 * @apiGroup update
 	 *
@@ -387,7 +421,7 @@ module.exports.setRouter = (app) => {
 	app.post(`${baseUrl}/:issueId/commentDelete`, auth.isAuthorized, issueController.deleteComment);
 
     /**
-	 * @api {post} /api/v1/issues/delete Delete issue coment by issueId and comment_id
+	 * @api {post} /api/v1/issues/:issueId/commentDelete Delete issue comment by issueId and comment_id
 	 * @apiVersion 0.0.1
 	 * @apiGroup delete
 	 *
@@ -414,13 +448,121 @@ module.exports.setRouter = (app) => {
 	   }
 	 */
 
+
 	app.post(`${baseUrl}/:issueId/attachment`, auth.isAuthorized, issueController.addAttachment);
+	 
+	/**
+	 * @api {post} /api/v1/issues/:issueId/attachment Upload a file attachment of a issue on the server
+	 * @apiVersion 0.0.1
+	 * @apiGroup create
+	 *
+	 * @apiParam {String} authToken The token for authentication.(Send authToken as query parameter, body parameter or as a header)
+	 * @apiParam {String} issueId issueId of the issue passed as the URL parameter
+	 * @apiParam {String} file file passed as form data
+	 *
+	 *  @apiSuccessExample {json} Success-Response:
+	 *  {
+	    "error": false,
+	    "message": "File uploaded Successfully",
+	    "status": 200,
+	    "data": [...]
+	    	}
+		}
+		}
+	  @apiErrorExample {json} Error-Response:
+	 *
+	 * {
+	    "error": true,
+	    "message": "Error Occured.,
+	    "status": 500,
+	    "data": null
+	   }
+	 */
+
 
 	app.get(`${baseUrl}/:issueId/attachment/get`, auth.isAuthorized, issueController.getAttachments);
+	
+	/**
+	 * @api {get} /api/v1/issues/:issueId/details Search issues
+	 * @apiVersion 0.0.1
+	 * @apiGroup read
+	 *
+	 * @apiParam {String} authToken The token for authentication.(Send authToken as query parameter, body parameter or as a header)
+	 * @apiParam {String} issueId issueId of the issue passed as the URL parameter
+	 *
+	 *  @apiSuccessExample {json} Success-Response:
+	 *  {
+	    error: false, 
+		message: "Attachments Found", 
+		status: 200, 
+		data: [Array<String>]
+	 	}
+	  @apiErrorExample {json} Error-Response:
+	 *
+	 * {
+	    "error": true,
+	    "message": "Error Occured.",
+	    "status": 500,
+	    "data": null
+	   }
+	 */
 
+	
 	app.get(`${baseUrl}/:issueId/attachment/download/:file`, auth.isAuthorized, issueController.downloadAttachment);
+	
+	/**
+	 * @api {get} /api/v1/issues/:issueId/attachment/download/:file Download a single file from server
+	 * @apiVersion 0.0.1
+	 * @apiGroup read
+	 *
+	 * @apiParam {String} authToken The token for authentication.(Send authToken as query parameter, body parameter or as a header)
+	 * @apiParam {String} issueId issueId of the issue passed as the URL parameter
+	 * @apiParam {String} file name of the file passed as the URL parameter
+	 *
+	 *  @apiSuccessExample {json} Success-Response:
+	 *  { file-download }
+	 * 
+	  @apiErrorExample {json} Error-Response:
+	 *
+	 * {
+	    "error": true,
+	    "message": "Cannot find file.",
+	    "status": 500,
+	    "data": null
+	   }
+	 */
+
+
 
 	app.post(`${baseUrl}/:issueId/attachment/delete/:file`, auth.isAuthorized, issueController.deleteAttachment);
+
+	/**
+	 * @api {post} /api/v1/issues/:issueId/attachment/delete/:file Delete a file attachment of a issue from the server
+	 * @apiVersion 0.0.1
+	 * @apiGroup delete
+	 *
+	 * @apiParam {String} authToken The token for authentication.(Send authToken as query parameter, body parameter or as a header)
+	 * @apiParam {String} issueId issueId of the issue passed as the URL parameter
+	 * @apiParam {String} file name of file passed as URL parameter
+	 *
+	 *  @apiSuccessExample {json} Success-Response:
+	 *  {
+	    "error": false,
+	    "message": "File deleted Successfully",
+	    "status": 200,
+	    "data": [...]
+	    	}
+		}
+	}
+	  @apiErrorExample {json} Error-Response:
+	 *
+	 * {
+	    "error": true,
+	    "message": "Error Occured.,
+	    "status": 500,
+	    "data": null
+	   }
+	 */
 
 }
 // end module.exports.setRouter

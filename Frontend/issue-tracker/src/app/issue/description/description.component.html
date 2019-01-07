@@ -16,7 +16,7 @@
 <div class="container-fluid main-container" *ngIf="issue">
   <div class="row py-5">
 
-    <div class="col-8">
+    <div class="col-12 col-md-8">
       <div class="row">
 
         <!-- issue title -->
@@ -100,10 +100,10 @@
                   </small>
                 </div>
                 <div class="row my-4" *ngFor="let comment of issue.comments">
-                  <div class="col-1 user-circle">
+                  <div class="col-auto user-circle">
                     <span>{{comment.createdBy | userName: 'initials' | async | uppercase}}</span>
                   </div>
-                  <div class="col-11">
+                  <div class="col">
                     <div class="row">
                       <div class="col-auto comment-body">
                         <b>{{comment.createdBy | userName | async}}</b>
@@ -150,7 +150,7 @@
     </div>
 
     <!-- side col -->
-    <div class="col-4">
+    <div class="col-12 pt-3 pt-md-0 col-md-4">
       <div class="row side-col">
 
         <!-- issue status -->

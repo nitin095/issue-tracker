@@ -43,10 +43,6 @@ let userSchema = new Schema({
     type: String,
     get: v => `${root}${v}`
   },
-  isFirstLogin: {
-    type: Boolean,
-    default: true
-  },
   resetPasswordToken: {
     type: String,
     default: null,

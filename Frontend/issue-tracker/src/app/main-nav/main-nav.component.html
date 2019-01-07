@@ -1,27 +1,46 @@
 <mat-sidenav-container class="sidenav-container">
+
+  <!-- side navigation menu displayed on mobile  -->
   <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [ngClass]="{'d-none': !(isHandset$ | async)}" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
-    <mat-toolbar>{{userName}}</mat-toolbar>
+    <mat-toolbar>{{userName || 'Menu'}}</mat-toolbar>
     <mat-nav-list *ngIf="url">
-      <a mat-list-item *ngIf="url.includes('issue')||url.includes('project')||url.includes('profile')"
-        [routerLink]="['dashboard']" (click)="drawer.close()">Dashboard</a>
+      <a mat-list-item *ngIf="url.includes('issue')||url.includes('project')||url.includes('profile')" [routerLink]="['dashboard']"
+        (click)="drawer.close()">Dashboard</a>
       <a mat-list-item (click)="drawer.close()" *ngIf="url.includes('home')" [routerLink]="['login']">Login</a>
       <a mat-list-item (click)="drawer.close()" *ngIf="url.includes('login')" [routerLink]="['home']">Signup</a>
-      <a mat-list-item (click)="drawer.close()" [routerLink]="['profile']">Profile</a>
-      <a mat-list-item (click)="drawer.close();logout()">Logout</a>
+      <a mat-list-item (click)="drawer.close()" *ngIf="!url.includes('home')&&!url.includes('login')" [routerLink]="['profile']">Profile</a>
+      <a mat-list-item (click)="drawer.close();logout()" *ngIf="!url.includes('home')&&!url.includes('login')">Logout</a>
     </mat-nav-list>
   </mat-sidenav>
+
   <mat-sidenav-content>
+
     <mat-toolbar color="primary" *ngIf="url">
+
+      <!-- side nav button displayed on mobile -->
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span class="logo">Issue tracker</span>
-      <span class="spacer"></span>
-      <div class="search-issue-input" *ngIf="url.includes('dashboard')||url.includes('browse')">
+
+      <!-- logo -->
+      <span class="logo" *ngIf="!(isHandset$ | async)||!searchOnMobile">Issue tracker</span>
+
+      <span class="spacer" *ngIf="!(isHandset$ | async)||!searchOnMobile"></span>
+      <!-- search bar -->
+      <div class="search-issue-input" [style.display]="[!(isHandset$ | async)||searchOnMobile?'flex':'none']" *ngIf="!url.includes('home')||!url.includes('login')">
         <input type="text" #issueSearch placeholder="Search issue" (keyup.enter)="router.navigate(['issue/search',issueSearch.value])">
         <mat-icon [routerLink]="['issue/search',issueSearch.value]">search</mat-icon>
       </div>
+      <span class="spacer" *ngIf="!(isHandset$ | async)||!searchOnMobile"></span>
+
+      <!-- search button for mobile -->
+      <button mat-icon-button class="d-sm-none" (click)="searchOnMobile=searchOnMobile?false:true">
+        <mat-icon *ngIf="!searchOnMobile">search</mat-icon>
+        <mat-icon *ngIf="searchOnMobile">cancel</mat-icon>
+      </button>
+
+      <!-- navigation buttons -->
       <button *ngIf="!(isHandset$ | async)&&url.includes('issue')||url.includes('project')||url.includes('profile')"
         mat-button [routerLink]="['dashboard']">Dashboard</button>
       <button *ngIf="!(isHandset$ | async)&&url.includes('home')" mat-button [routerLink]="['login']">Login</button>
@@ -32,7 +51,11 @@
         <button mat-menu-item [routerLink]="['profile']">Profile</button>
         <button mat-menu-item (click)="logout()">Logout</button>
       </mat-menu>
+
     </mat-toolbar>
+
+    <!-- router outlet wrapper -->
     <ng-content></ng-content>
+
   </mat-sidenav-content>
 </mat-sidenav-container>

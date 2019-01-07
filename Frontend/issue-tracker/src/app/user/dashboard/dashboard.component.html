@@ -64,18 +64,24 @@
                 </mat-sidenav>
                 <mat-sidenav-content>
                     <div class="container-fluid">
-                        <div class="row py-4 header-row sticky-top align-items-center">
-                            <div class="col-12 col-md-auto">
+                        <div class="row py-2 py-md-3 py-lg-4 header-row sticky-top align-items-center">
+                            <div class="col">
                                 <div class="row">
                                     <div class="col-12 display-4 title mb-2">
+                                        <button mat-icon-button class="d-sm-none" (click)="drawer.open()">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
                                         <span *ngIf="activeCategory.assigned">Assigned Issues</span>
                                         <span *ngIf="activeCategory.reported">Reported Issues</span>
                                         <span *ngIf="activeCategory.watching">Issues watching</span>
+                                        <button mat-icon-button (click)="showMobileFilters=true" class="ml-auto d-lg-none">
+                                            <mat-icon>filter_list</mat-icon>
+                                        </button>
                                     </div>
                                     <div class="col-12 col-md-8">
                                         <input (keyup)="filterIssues($event.target.value)" placeholder="Filter by title, status or date">
                                     </div>
-                                    <div class="col-12 pt-2 col-md-4 pt-md-0">
+                                    <div class="col">
                                         <mat-select [(ngModel)]="selectedReporter" (ngModelChange)="filterReporter(selectedReporter)"
                                             disableOptionCentering="true">
                                             <mat-option *ngFor="let reporter of allReporters" [value]="reporter">
@@ -147,3 +153,47 @@
         <button mat-button (click)="notification.display=false">DISMISS</button>
     </mat-card-actions>
 </mat-card>
+
+
+<!-- mobile filter menu -->
+<div class="mobile-filter" *ngIf="showMobileFilters">
+    <div class="backdrop" (click)="showMobileFilters=false"></div>
+    <div class="container">
+        <span class="heading-sm">Filter by status</span>
+        <div class="issue-count my-3" *ngIf="issues">
+            <div class="row">
+                <div class="col-auto" (click)="resetIssues()">
+                    <div class="row">
+                        <div class="col-12 display-4 text-center">{{allIssues.length}}</div>
+                        <small class="col-12 text-center">Issues</small>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row filters">
+                        <div class="col-auto">
+                            <small (click)="filterIssues('InProgress')"><b>{{issuesStatusCount.inProgress}}</b>
+                                In progress</small><br>
+                            <small (click)="filterIssues('todo')"><b>{{issuesStatusCount.toDo}}</b>
+                                To Do</small>
+                        </div>
+                        <div class="col-auto">
+                            <small (click)="filterIssues('done')"><b>{{issuesStatusCount.done}}</b>
+                                Done</small><br>
+                            <small (click)="filterIssues('backlog')"><b>{{issuesStatusCount.backlog}}</b>
+                                Backlog</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <span class="heading-sm">Filter by reporter</span>
+        <mat-list>
+            <mat-list-item matRipple *ngFor="let reporter of allReporters" (click)="filterReporter(reporter)">
+                <span matListAvatar>{{reporter | userName:'initials' | async}}</span>
+                <h3 matLine> {{reporter | userName | async}} </h3>
+            </mat-list-item>
+        </mat-list>
+
+    </div>
+</div>
