@@ -28,7 +28,7 @@
 
       <span class="spacer" *ngIf="!(isHandset$ | async)||!searchOnMobile"></span>
       <!-- search bar -->
-      <div class="search-issue-input" [style.display]="[!(isHandset$ | async)||searchOnMobile?'flex':'none']" *ngIf="!url.includes('home')||!url.includes('login')">
+      <div class="search-issue-input" *ngIf="!url.includes('home')&&!url.includes('login')" [ngClass]="{'d-none': (isHandset$ | async)&&!searchOnMobile}">
         <input type="text" #issueSearch placeholder="Search issue" (keyup.enter)="router.navigate(['issue/search',issueSearch.value])">
         <mat-icon [routerLink]="['issue/search',issueSearch.value]">search</mat-icon>
       </div>

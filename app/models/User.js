@@ -3,7 +3,7 @@
 const mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-const root = 'https://s3.amazonaws.com/mybucket';
+const root = 'http://ec2-13-233-92-229.ap-south-1.compute.amazonaws.com/api/v1/users/photo/';
 
 // Schema Declaration
 let userSchema = new Schema({
@@ -33,11 +33,15 @@ let userSchema = new Schema({
   },
   countryCode: {
     type: Number,
-    required: true
+    default: null
   },
   mobileNumber: {
     type: Number,
-    required: true
+    default: null
+  },
+  userType : {
+    type: String,
+    default: 'normal'
   },
   picture: {
     type: String,

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
-import { AppService } from './../app.service'
+import { AppService } from './../app.service';
+import { AuthService } from "angularx-social-login";
+import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { map, startWith } from 'rxjs/operators';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material';
@@ -41,9 +43,8 @@ export class HomeComponent implements OnInit {
 
   matcher = new MyErrorStateMatcher();
 
-  constructor(private _route: ActivatedRoute, private router: Router, private appService: AppService, public snackBar: MatSnackBar) { }
+  constructor(private _route: ActivatedRoute, private router: Router, private authService: AuthService, private appService: AppService, public snackBar: MatSnackBar) { }
 
-  //models
   public email: String;
   public password: String
   public firstName: string;
@@ -74,6 +75,71 @@ export class HomeComponent implements OnInit {
     return this.options.filter(option => option.country.toLowerCase().includes(filterValue));
   }
 
+  signInWithGoogle(): void {
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((user) => {
+      this.appService.googleSignin({idToken: user.idToken}).subscribe(
+        response => {
+          this.loading = false;
+          if (response.status === 200) {
+            let userDetails = response.data.userDetails;
+            Cookie.set('authtoken', response.data.authToken);
+            Cookie.set('receiverId', userDetails.id);
+            Cookie.set('receiverName', user.name);
+            this.appService.setUserInfoInLocalStorage(userDetails);
+            this.router.navigate(['dashboard']);
+          } else {
+            this.snackBar.open(response.message, 'Close', { duration: 4000, });
+            console.log(response.message)
+          }
+        },
+        error => {
+          this.loading = false;
+          this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
+          console.log("some error occured");
+          console.log(error.error.message)
+        }
+      )
+    }, (err) => {
+      this.snackBar.open(err, 'close')
+    })
+  }
+
+  signInWithFB(): void {
+    this.authService.signIn(FacebookLoginProvider.PROVIDER_ID).then((user) => {
+      let data = {
+        idToken: user.idToken,
+        user: {
+          email: user.email,
+          name: user.name,
+          sub: user.id
+        }
+      }
+      this.appService.fbSignin(data).subscribe(
+        response => {
+          this.loading = false;
+          if (response.status === 200) {
+            let userDetails: any = user;
+            userDetails.userId = user.id;
+            console.log(userDetails)
+            Cookie.set('authtoken', userDetails.authToken);
+            Cookie.set('receiverId', userDetails.id);
+            Cookie.set('receiverName', userDetails.name);
+            this.appService.setUserInfoInLocalStorage(userDetails);
+            this.router.navigate(['dashboard']);
+          } else {
+            this.snackBar.open(response.message, 'Close', { duration: 4000, });
+            console.log(response.message)
+          }
+        },
+        error => {
+          this.loading = false;
+          this.snackBar.open(error.error.message, 'Close', { duration: 4000, });
+          console.log("some error occured");
+          console.log(error.error.message)
+        }
+      )
+    })
+  }
 
   signUp(): any {
     this.loading = true;
@@ -115,5 +181,5 @@ export class HomeComponent implements OnInit {
     )
   }//end signUp
 
-  
+
 }

@@ -1,7 +1,5 @@
 // dependencies
 const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-const request = require("request")
 
 // models
 const Auth = mongoose.model('Auth')

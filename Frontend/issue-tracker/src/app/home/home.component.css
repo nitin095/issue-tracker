@@ -9,6 +9,40 @@ mat-progress-bar {
   position: relative;
 }
 
+.card-header-image {
+  background-size: cover;
+}
+
+.card-header-image-fb {
+  background-size: cover;
+  background-image: url('https://cdn3.iconfinder.com/data/icons/social-icons-5/606/Facebook.png')
+}
+
+.card-header-image-google {
+  background-size: cover;
+  background-image: url('https://cdn.freebiesupply.com/logos/large/2x/google-g-2015-logo-png-transparent.png')
+}
+
+.continue-card {
+  border: 1px solid transparent;
+  cursor: default;
+  transition: all 0.3s ease
+}
+
+.continue-card mat-card-header {
+  display: flex;
+  align-items: center;
+}
+
+.continue-card:hover {
+  border: 1px solid royalblue;
+  background-color: aliceblue
+}
+
+.continue-card mat-card-title {
+  font-size: 0.8rem
+}
+
 .backdrop::after {
   content: "";
   position: absolute;

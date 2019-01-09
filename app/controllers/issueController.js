@@ -16,7 +16,7 @@ const path = require('path')
 // Models 
 const issueModel = mongoose.model('Issue')
 const projectModel = mongoose.model('Project')
-
+const UserModel = mongoose.model('User')
 
 // Create issue 
 let createIssue = (req, res) => {
@@ -225,6 +225,15 @@ let editIssue = (req, res) => {
             let apiResponse = response.generate(false, 'issue details edited', 200, result)
             res.send(apiResponse)
 
+            for (let key in options) {
+                if (key === 'assignee') {
+                    UserModel.findOne({ userId: result.reporter }).exec((err, user) => {
+                        if (err) return
+                        else mailer.sendissueAssignedNotification(result, user.email)
+                    })
+                }
+            }
+
             //sending notification to all watchers, assignee and reporter
             let receivers = new Set([...result.watchers, result.assignee, result.reporter])
             let notification = {
@@ -232,7 +241,7 @@ let editIssue = (req, res) => {
                 receivers: Array(receivers),
                 editor: req.user.userId,
                 issueId: req.params.issueId,
-                data: req.body,
+                data: options,
                 time: Date.now()
             }
             socketLib.sendNotification(notification)

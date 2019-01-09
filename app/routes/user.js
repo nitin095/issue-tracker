@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require("./../../app/controllers/userController");
+const socialUserController = require("./../controllers/socialUserController");
 const appConfig = require("./../../config/appConfig")
 const auth = require('./../middlewares/auth')
 
@@ -140,6 +141,64 @@ module.exports.setRouter = (app) => {
 	 *  {
 	    "error": false,
 	    "message": "User Created Successfully",
+	    "status": 200,
+	    "data": []
+	    	}
+		}
+	}
+	  @apiErrorExample {json} Error-Response:
+	 *
+	 * {
+	    "error": true,
+	    "message": "Error Occured.,
+	    "status": 500,
+	    "data": null
+	   }
+	 */
+
+
+	app.post(`${baseUrl}/signin/google`, socialUserController.googleSignUp);
+
+    /**
+	 * @api {post} /api/v1/users/signin/google Sign-in using Google
+	 * @apiVersion 0.0.1
+	 * @apiGroup create
+	 *
+     * @apiParam {String} idToken Google idToken of the user passed as the body parameter
+	 *
+	 *  @apiSuccessExample {json} Success-Response:
+	 *  {
+	    "error": false,
+	    "message": "User Signed-in",
+	    "status": 200,
+	    "data": []
+	    	}
+		}
+	}
+	  @apiErrorExample {json} Error-Response:
+	 *
+	 * {
+	    "error": true,
+	    "message": "Error Occured.,
+	    "status": 500,
+	    "data": null
+	   }
+	 */
+
+
+	app.post(`${baseUrl}/signin/fb`, socialUserController.fbSignUp);
+
+    /**
+	 * @api {post} /api/v1/users/signin/google Sign-in using Google
+	 * @apiVersion 0.0.1
+	 * @apiGroup create
+	 *
+     * @apiParam {String} idToken Facebook idToken of the user passed as the body parameter
+	 *
+	 *  @apiSuccessExample {json} Success-Response:
+	 *  {
+	    "error": false,
+	    "message": "User Signed-in",
 	    "status": 200,
 	    "data": []
 	    	}

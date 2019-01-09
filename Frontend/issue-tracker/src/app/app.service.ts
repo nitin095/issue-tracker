@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { AuthService } from "angularx-social-login";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +13,11 @@ export class AppService {
   private baseUrl = 'http://ec2-13-233-92-229.ap-south-1.compute.amazonaws.com/api/v1';
 
   // private baseUrl = 'http://localhost:3000/api/v1';
-  
+
   private authToken: string = Cookie.get('authtoken');
 
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient, private authService: AuthService, private router: Router) {
+      if (!window.location.href.includes('login') && !Cookie.get('authtoken')) this.router.navigate(['home'])
   }
 
   private handleError(err: HttpErrorResponse) {
@@ -46,6 +49,16 @@ export class AppService {
       .set('authToken', Cookie.get('authtoken'));
     return this._http.post(`${this.baseUrl}/users/logout`, params);
   } // end logout function
+
+  googleSignin(token): Observable<any> {
+    let response = this._http.post(`${this.baseUrl}/users/signin/google`, token);
+    return response
+  }
+
+  fbSignin(data): Observable<any> {
+    let response = this._http.post(`${this.baseUrl}/users/signin/fb`, data);
+    return response
+  }
 
   getUser(userId): Observable<any> {
     this.authToken = Cookie.get('authtoken');
@@ -85,7 +98,7 @@ export class AppService {
     return resposne
   }
 
-  getProject(id,fields?): Observable<any> {
+  getProject(id, fields?): Observable<any> {
     let response = this._http.get(`${this.baseUrl}/projects/${id}/details?authToken=${this.authToken}&fields=${fields}`)
     return response
   }
@@ -123,7 +136,7 @@ export class AppService {
     return response
   }
 
-  addIssueAttachment(issueId,files): Observable<any> {
+  addIssueAttachment(issueId, files): Observable<any> {
     const fd = new FormData();
     for (let file of files) {
       fd.append('file', file, file.name);
@@ -135,7 +148,7 @@ export class AppService {
     return resposne
   }
 
-  addProjectAttachment(projectId,files): Observable<any> {
+  addProjectAttachment(projectId, files): Observable<any> {
     const fd = new FormData();
     for (let file of files) {
       fd.append('file', file, file.name);
@@ -152,13 +165,13 @@ export class AppService {
     return response
   }
 
-  getIssueAttachmentDownloadLink(issueId,file): String {
+  getIssueAttachmentDownloadLink(issueId, file): String {
     let link = `${this.baseUrl}/issues/${issueId}/attachment/download/${file}?authToken=${this.authToken}`
     return link
   }
 
-  deleteIssueAttachment(issueId,file): Observable<any> {
-    let response = this._http.post(`${this.baseUrl}/issues/${issueId}/attachment/delete/${file}?authToken=${this.authToken}`,'')
+  deleteIssueAttachment(issueId, file): Observable<any> {
+    let response = this._http.post(`${this.baseUrl}/issues/${issueId}/attachment/delete/${file}?authToken=${this.authToken}`, '')
     return response
   }
 

@@ -12,11 +12,28 @@ import { AppComponent } from './app.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
+import { GoogleLoginProvider, FacebookLoginProvider } from "angularx-social-login";
 import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 import { AppService } from "./app.service";
 import { ProjectComponent } from './project/project.component'
+
+let config = new AuthServiceConfig([
+  {
+    id: GoogleLoginProvider.PROVIDER_ID,
+    provider: new GoogleLoginProvider('1064919328221-7ce00cmar1o5e0bcqccq9seeftl11bma.apps.googleusercontent.com')
+  },
+  {
+    id: FacebookLoginProvider.PROVIDER_ID,
+    provider: new FacebookLoginProvider("347708909156348")
+  }
+]);
+export function provideConfig() {
+  return config;
+}
+
 
 @NgModule({
   declarations: [
@@ -32,6 +49,7 @@ import { ProjectComponent } from './project/project.component'
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    SocialLoginModule,
     LayoutModule,
     SharedModule,
     IssueModule,
@@ -39,7 +57,10 @@ import { ProjectComponent } from './project/project.component'
     AngularEditorModule,
     AppRoutingModule
   ],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: AuthServiceConfig,
+    useFactory: provideConfig
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,7 +5,27 @@
       <img src="./../assets/images/img.png">
     </div>
     <div class="row justify-content-center">
-      <span class="col-12 text-center display-4" style="font-size:2rem">Track and manage project issues with your team</span>
+      <span class="col-12 text-center display-4 pb-3" style="font-size:2rem">Track and manage project issues with your team</span>
+      <div class="col-12">
+        <div class="row justify-content-center">
+          <div class="col-auto my-2">
+              <mat-card (click)="signInWithGoogle()" class="continue-card">
+                <mat-card-header>
+                  <div class="card-header-image-google" mat-card-avatar></div>
+                  <mat-card-title class="m-0">Continue with Google</mat-card-title>
+                </mat-card-header>
+              </mat-card>
+            </div>
+          <div class="col-auto my-2">
+            <mat-card (click)="signInWithFB()" class="continue-card">
+              <mat-card-header>
+                <div class="card-header-image-fb" mat-card-avatar></div>
+                <mat-card-title class="m-0">Continue with Facebook</mat-card-title>
+              </mat-card-header>
+            </mat-card>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <mat-card class="example-card col-auto" [ngClass]="{backdrop: loading}">
@@ -67,7 +87,8 @@
       </form>
     </mat-card-content>
     <mat-card-actions>
-      <button class="sing-up-btn" [ngClass]="{backdrop: loading}" mat-flat-button (click)="loading=true;signUp()">SIGN UP</button>
+      <button class="sing-up-btn" [ngClass]="{backdrop: loading}" mat-flat-button (click)="loading=true;signUp()">SIGN
+        UP</button>
     </mat-card-actions>
   </mat-card>
 
